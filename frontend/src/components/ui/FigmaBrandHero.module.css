@@ -19,13 +19,6 @@
   text-align: center;
 }
 
-.brandLockup {
-  position: relative;
-  width: min(320px, 85%);
-  margin-bottom: 24px;
-  mix-blend-mode: multiply;
-}
-
 @media (min-width: 640px) {
   .heroCanvas {
     padding: 58px 40px 44px;
@@ -313,7 +306,7 @@
 }
 
 .cursorTopRight {
-  top: 44px;
+  top: 20px;
   right: 36px;
 }
 

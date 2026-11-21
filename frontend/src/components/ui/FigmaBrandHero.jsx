@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Link } from 'react-router';
 import { motion as Motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, BookOpen, RotateCw } from 'lucide-react';
-import { BrandLockup } from '../../assets/illustrations/BrandLogo.jsx';
 import styles from './FigmaBrandHero.module.css';
 
 const EASE_OUT_EXPO = [0.16, 1, 0.3, 1];
@@ -117,10 +116,6 @@ export function FigmaBrandHero({
     >
       <div className={styles.ambientGlow} aria-hidden="true" />
       <div className={styles.ambientGlowGreen} aria-hidden="true" />
-
-      <div className={styles.brandLockup}>
-        <BrandLockup width={320} />
-      </div>
 
       {/* Top Status Pill */}
       <Motion.div
