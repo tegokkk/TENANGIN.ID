@@ -1,0 +1,45 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "worker": "node src/worker.js",
+    "db:migrate": "knex migrate:latest --knexfile knexfile.js",
+    "db:rollback": "knex migrate:rollback --knexfile knexfile.js",
+    "bootstrap:admin": "node scripts/bootstrap-admin.js",
+    "backup:verify": "node scripts/backup-restore.mjs --verify",
+    "capacity:check": "node scripts/capacity-check.mjs",
+    "test": "vitest run",
+    "lint": "eslint src database scripts tests",
+    "db:seed:test": "node scripts/seed-test.mjs"
+  },
+  "dependencies": {
+    "@vercel/functions": "3.11.3",
+    "argon2": "^0.41.1",
+    "connect-pg-simple": "^10.0.0",
+    "cookie-parser": "^1.4.7",
+    "csrf-sync": "^4.0.0",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "express-session": "^1.18.1",
+    "helmet": "^8.0.0",
+    "knex": "^3.1.0",
+    "otplib": "^12.0.1",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "pg": "^8.13.3",
+    "pg-boss": "^10.1.5",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.20.0",
+    "eslint": "^9.20.0",
+    "globals": "^15.15.0",
+    "supertest": "^7.0.0",
+    "vitest": "^3.0.5"
+  }
+}

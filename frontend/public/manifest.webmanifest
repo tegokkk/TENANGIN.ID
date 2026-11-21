@@ -1,0 +1,31 @@
+{
+  "name": "TENANGIN.ID — Ruang Aman Regulasi Emosi",
+  "short_name": "TENANGIN.ID",
+  "description": "Aplikasi pendamping manajemen stres akademik dan regulasi emosi siswa SMA/MA.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#FCFBF8",
+  "theme_color": "#195654",
+  "lang": "id",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

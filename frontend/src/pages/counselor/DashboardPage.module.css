@@ -1,0 +1,81 @@
+.privacyRow {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+}
+
+.privacyIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background-color: var(--color-surface);
+  color: var(--color-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: var(--space-4);
+}
+
+.metricLabel {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--color-text-secondary);
+}
+
+.metricValue {
+  font-size: 1.85rem;
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--color-primary-hover);
+  font-variant-numeric: tabular-nums;
+}
+
+.filterGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  align-items: end;
+}
+
+@media (min-width: 768px) {
+  .filterGrid {
+    grid-template-columns: 1fr 1fr 1.3fr;
+  }
+}
+
+.paginationBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 8px;
+}
+
+.exportRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.metricValue {
+  margin-top: 8px;
+  font-size: clamp(1.75rem, 2.5vw, 2rem);
+}
+.paginationBar {
+  border-top: 1px solid var(--color-border);
+  padding-top: 16px;
+}
+.exportRow > * {
+  min-width: 0;
+  max-width: 100%;
+}

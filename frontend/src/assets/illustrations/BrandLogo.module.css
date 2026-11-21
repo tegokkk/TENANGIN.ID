@@ -1,0 +1,33 @@
+.emblem,
+.wordmark,
+.lockup {
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+
+.emblem {
+  flex-shrink: 0;
+}
+
+.wordmark {
+  width: 168px;
+  max-width: 100%;
+  height: auto;
+}
+
+.lockup {
+  max-width: 100%;
+  height: auto;
+}
+
+@media (max-width: 479px) {
+  .wordmark {
+    width: 142px;
+  }
+}
+
+@media (max-width: 359px) {
+  .wordmark {
+    width: 124px;
+  }
+}

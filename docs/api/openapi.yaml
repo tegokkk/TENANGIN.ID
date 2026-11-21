@@ -1,0 +1,2400 @@
+openapi: 3.1.0
+info:
+  title: TENANGIN.ID API
+  version: 1.4.0
+  description: 'API HTTP untuk platform manajemen stres akademik dan regulasi emosi siswa SMA/MA.
+
+    Semua endpoint terautentikasi menggunakan cookie sesi HttpOnly (`tenangin.sid`),
+
+    perlindungan CSRF synchronizer (`x-csrf-token`), header `Cache-Control: no-store`,
+
+    dan otorisasi berbasis peran (`student`, `bk`, `superadmin`) yang ditegakkan di server.
+
+    '
+servers:
+  - url: /api
+paths:
+  /health:
+    get:
+      summary: Cek status hidup API
+      responses:
+        '200':
+          description: Layanan aktif
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security: []
+  /ready:
+    get:
+      summary: Cek kesiapan database dan mode aplikasi
+      responses:
+        '200':
+          description: Siap melayani
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '503':
+          description: Database belum siap
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security: []
+  /public/config:
+    get:
+      summary: Konfigurasi publik sekolah, jam layanan, kontak terverifikasi, dan appMode
+      responses:
+        '200':
+          description: Konfigurasi publik
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security: []
+  /auth/csrf:
+    get:
+      summary: Mengambil token synchronizer CSRF untuk sesi aktif
+      responses:
+        '200':
+          description: Token CSRF dikembalikan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security: []
+  /auth/session:
+    get:
+      summary: Memeriksa status sesi saat ini tanpa mengembalikan error 401
+      responses:
+        '200':
+          description: Status autentikasi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security: []
+  /auth/login:
+    post:
+      summary: Masuk dengan kode akun/email dan kata sandi (role berasal dari server)
+      responses:
+        '200':
+          description: Berhasil masuk; siswa aktif langsung ke student_home, staf ke mfa_verify atau dashboard. Persetujuan hanya membatasi fitur data pribadi.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '401':
+          description: Kredensial tidak cocok (pesan netral)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /auth/register:
+    post:
+      summary: Pendaftaran siswa yang menunggu persetujuan Superadmin
+      security:
+        - csrfToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [displayName, nisn, gradeGroup, password]
+              properties:
+                displayName: { type: string, minLength: 2, maxLength: 120 }
+                nisn: { type: string, pattern: '^[0-9]{10}$' }
+                gradeGroup: { type: string, minLength: 1, maxLength: 64 }
+                password: { type: string, minLength: 8, maxLength: 128, writeOnly: true }
+                schoolCode: { type: string, minLength: 3, maxLength: 64 }
+      responses:
+        '202': { description: Pendaftaran tersimpan dan akun belum dapat masuk }
+        '400': { description: Data tidak valid atau kuota penuh }
+        '403': { description: CSRF tidak valid }
+        '409': { description: NISN sudah digunakan }
+        '429': { description: Batas permintaan tercapai }
+        '503': { description: Pendaftaran belum tersedia }
+  /auth/activate:
+    post:
+      deprecated: true
+      summary: Aktivasi token publik sudah dihentikan
+      security:
+        - csrfToken: []
+      responses:
+        '410': { description: Aktivasi hanya melalui dashboard Superadmin }
+  /auth/recover:
+    post:
+      summary: Pemulihan kata sandi memakai token sekali pakai dan mencabut sesi lama
+      responses:
+        '200':
+          description: Kata sandi diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /auth/change-password:
+    post:
+      summary: Mengubah kata sandi akun sendiri (tersedia untuk student, bk, superadmin)
+      responses:
+        '200':
+          description: Kata sandi diperbarui dan sesi lain dicabut
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /auth/mfa/setup:
+    post:
+      summary: Memulai pendaftaran MFA TOTP staf (bk/superadmin)
+      responses:
+        '200':
+          description: Mengembalikan secret dan otpauthUri
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /auth/mfa/setup/confirm:
+    post:
+      summary: Mengonfirmasi TOTP 6 digit saat enrollment MFA staf
+      responses:
+        '200':
+          description: MFA aktif dan mengembalikan recovery codes sekali pakai
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /auth/mfa/verify:
+    post:
+      summary: Verifikasi kode 6 digit TOTP untuk membuka akses dashboard staf
+      responses:
+        '200':
+          description: Sesi MFA staf terverifikasi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /auth/mfa/recover:
+    post:
+      summary: Verifikasi kode pemulihan MFA sekali pakai
+      responses:
+        '200':
+          description: Sesi MFA staf terverifikasi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /auth/logout:
+    post:
+      summary: Mencabut sesi di PostgreSQL dan menghapus cookie sesi
+      responses:
+        '200':
+          description: Berhasil keluar
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /me:
+    get:
+      summary: Profil sesi minimal, sekolah, status izin, dan status MFA
+      responses:
+        '200':
+          description: Profil aktif
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '401':
+          description: Belum terautentikasi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - sessionCookie: []
+  /me/deletion-request:
+    post:
+      summary: Permintaan penghapusan entri pribadi atau akun (wajib autentikasi ulang kata sandi)
+      responses:
+        '202':
+          description: Penghapusan diproses / dijadwalkan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /consent-policy:
+    get:
+      summary: Kebijakan persetujuan aktif
+      responses:
+        '200':
+          description: Detail kebijakan aktif milik sekolah akun; policy null jika belum diterbitkan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+  /consents:
+    post:
+      summary: Menyimpan keputusan persetujuan siswa (accepted atau declined)
+      responses:
+        '200':
+          description: Persetujuan tersimpan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /consents/withdraw:
+    post:
+      summary: Menarik persetujuan aktif dan langsung menghentikan pengumpulan/pengingat
+      responses:
+        '200':
+          description: Persetujuan ditarik
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /consents/resume:
+    post:
+      summary: Mengaktifkan kembali pencatatan siswa pada mode account_approval
+      description: Memerlukan akun siswa aktif dan CSRF. Tidak menciptakan persetujuan kebijakan atau wali; mode consent tetap memerlukan kebijakan.
+      responses:
+        '200':
+          description: Pencatatan kembali aktif
+        '400':
+          description: Sekolah memakai mode consent
+      security:
+        - sessionCookie: []
+          csrfToken: []
+  /moods:
+    description: Akses siswa mengikuti personal_access_mode sekolah dan pilihan jeda pencatatan; tidak membuat persetujuan otomatis.
+    get:
+      summary: Daftar cek suasana hati harian milik siswa
+      responses:
+        '200':
+          description: Riwayat mood siswa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+    post:
+      summary: Simpan atau perbarui mood tanggal lokal zona waktu sekolah (atau lewati)
+      responses:
+        '201':
+          description: Mood tersimpan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /moods/{id}:
+    patch:
+      summary: Memperbarui entri mood milik sendiri
+      responses:
+        '200':
+          description: Mood diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+    delete:
+      summary: Menghapus entri mood milik sendiri
+      responses:
+        '200':
+          description: Mood dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+  /screening/active:
+    get:
+      summary: Instrumen skrining aktif (atau simulasi berlabel di mode demo)
+      responses:
+        '200':
+          description: Info instrumen atau status belum tersedia
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+  /screening/responses:
+    get:
+      summary: Riwayat respons skrining milik siswa
+      responses:
+        '200':
+          description: Daftar respons
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+    post:
+      summary: Mengirim jawaban skrining untuk dihitung server sesuai versi instrumen
+      responses:
+        '201':
+          description: Respons tersimpan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /journals:
+    get:
+      summary: Daftar entri jurnal terdekripsi milik siswa
+      responses:
+        '200':
+          description: Daftar jurnal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+    post:
+      summary: Membuat entri jurnal terenkripsi baru (maks 2.000 karakter/teks)
+      responses:
+        '201':
+          description: Jurnal tersimpan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /journals/{id}:
+    get:
+      summary: Membaca satu entri jurnal milik sendiri (404 jika milik siswa lain)
+      responses:
+        '200':
+          description: Detail jurnal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+    patch:
+      summary: Memperbarui jurnal dengan pemeriksaan versi (409 jika bentrok edit)
+      responses:
+        '200':
+          description: Jurnal diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '409':
+          description: Konflik versi edit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+    delete:
+      summary: Menghapus jurnal milik sendiri
+      responses:
+        '200':
+          description: Jurnal dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+  /exercises:
+    get:
+      summary: Daftar materi latihan menenangkan diri berstatus published
+      responses:
+        '200':
+          description: Daftar latihan terbit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security: []
+  /exercises/{slug}:
+    get:
+      summary: Detail satu materi latihan berstatus published
+      responses:
+        '200':
+          description: Detail latihan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security: []
+    parameters:
+      - name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+  /exercise-sessions:
+    get:
+      summary: Riwayat sesi latihan milik siswa
+      responses:
+        '200':
+          description: Riwayat sesi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+    post:
+      summary: Memulai pencatatan sesi latihan baru
+      responses:
+        '201':
+          description: Sesi dimulai
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /exercise-sessions/{id}:
+    patch:
+      summary: Memperbarui status (paused/completed/stopped) dan activeSeconds
+      responses:
+        '200':
+          description: Sesi diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+  /tasks:
+    get:
+      summary: Daftar tugas dan langkah kecil milik siswa
+      responses:
+        '200':
+          description: Daftar tugas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+    post:
+      summary: Menambah tugas baru (maks 120 karakter)
+      responses:
+        '201':
+          description: Tugas tersimpan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /tasks/{id}:
+    patch:
+      summary: Memperbarui tugas milik sendiri
+      responses:
+        '200':
+          description: Tugas diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+    delete:
+      summary: Menghapus tugas beserta seluruh langkahnya
+      responses:
+        '200':
+          description: Tugas dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+  /tasks/{id}/steps:
+    post:
+      summary: Menambah langkah kecil pada tugas milik sendiri
+      responses:
+        '201':
+          description: Langkah ditambahkan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+  /tasks/{id}/steps/{stepId}:
+    patch:
+      summary: Memperbarui status/judul langkah kecil
+      responses:
+        '200':
+          description: Langkah diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+    delete:
+      summary: Menghapus langkah kecil
+      responses:
+        '200':
+          description: Langkah dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: stepId
+        in: path
+        required: true
+        schema:
+          type: string
+  /schedule-blocks:
+    get:
+      summary: Daftar blok istirahat dan tidur pribadi siswa
+      responses:
+        '200':
+          description: Daftar blok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+    post:
+      summary: Menambah blok istirahat atau tidur
+      responses:
+        '201':
+          description: Blok tersimpan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /schedule-blocks/{id}:
+    delete:
+      summary: Menghapus blok jadwal pribadi
+      responses:
+        '200':
+          description: Blok dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+  /reminders:
+    get:
+      summary: Mengambil preferensi pengingat dalam aplikasi (default OFF)
+      responses:
+        '200':
+          description: Preferensi pengingat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+    put:
+      summary: Menyimpan preferensi pengingat, hari, jam, dan jam tenang
+      responses:
+        '200':
+          description: Preferensi disimpan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /reminders/due:
+    get:
+      summary: Mengecek pengingat dalam aplikasi yang jatuh tempo dan belum dikirim hari ini
+      responses:
+        '200':
+          description: Status pengingat jatuh tempo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+  /reflections:
+    get:
+      summary: Daftar refleksi mingguan milik siswa
+      responses:
+        '200':
+          description: Daftar refleksi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+    post:
+      summary: Menyimpan refleksi minggu lokal Senin-Minggu (unik per siswa + minggu)
+      responses:
+        '201':
+          description: Refleksi tersimpan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /reflections/{id}:
+    patch:
+      summary: Memperbarui refleksi mingguan
+      responses:
+        '200':
+          description: Refleksi diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+    delete:
+      summary: Menghapus refleksi mingguan
+      responses:
+        '200':
+          description: Refleksi dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+  /articles:
+    get:
+      summary: Daftar artikel pustaka psikoedukasi berstatus published (publik)
+      responses:
+        '200':
+          description: Daftar artikel terbit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security: []
+  /articles/{slug}:
+    get:
+      summary: Detail satu artikel berstatus published (draft mengembalikan 404)
+      responses:
+        '200':
+          description: Detail artikel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security: []
+    parameters:
+      - name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+  /help-requests:
+    get:
+      summary: Riwayat permintaan bantuan milik siswa sendiri
+      responses:
+        '200':
+          description: Daftar permintaan bantuan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+    post:
+      summary: Mengirim permintaan bantuan sukarela ke pengelola Superadmin (wajib header Idempotency-Key)
+      responses:
+        '201':
+          description: Permintaan tersimpan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '200':
+          description: Permintaan terdeduplikasi untuk Idempotency-Key yang sama
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /help-requests/{id}:
+    get:
+      summary: Detail satu permintaan bantuan milik siswa sendiri
+      responses:
+        '200':
+          description: Detail permintaan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+  /help-requests/{id}/status:
+    patch:
+      summary: Pembatalan permintaan bantuan oleh siswa pemilik
+      responses:
+        '200':
+          description: Status diubah menjadi cancelled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+  /group-feedback:
+    get:
+      summary: Pesan kelompok satu arah yang diterbitkan untuk kelompok siswa
+      responses:
+        '200':
+          description: Daftar pesan kelompok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+  /bk/dashboard:
+    get:
+      summary: Ringkasan agregat mingguan tersupresi (k=5) sesuai penugasan BK (read-only)
+      responses:
+        '200':
+          description: Ringkasan agregat aman BK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '403':
+          description: Ditolak bila bukan BK atau MFA belum diverifikasi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - sessionCookie: []
+  /bk/activities:
+    get:
+      summary: Allowlist metadata aktivitas siswa dalam penugasan BK (tanpa isi pribadi)
+      responses:
+        '200':
+          description: Daftar metadata aktivitas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '403':
+          description: Ditolak bila bukan BK atau filter di luar penugasan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - sessionCookie: []
+  /superadmin/dashboard:
+    get:
+      summary: Ringkasan operasional Superadmin (wajib MFA)
+      responses:
+        '200':
+          description: Ringkasan sistem
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+  /superadmin/users:
+    get:
+      summary: Daftar akun seluruh role (tanpa hash kata sandi atau secret MFA)
+      responses:
+        '200':
+          description: Daftar akun
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+    post:
+      summary: Superadmin membuat dan mengaktifkan akun menggunakan sandi awal
+      responses:
+        '201':
+          description: Akun dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /superadmin/users/{id}:
+    patch:
+      summary: Memperbarui role/status/kelompok akun dan mencabut sesi jika dinonaktifkan
+      responses:
+        '200':
+          description: Akun diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+  /superadmin/users/{id}/recovery-token:
+    post:
+      summary: Menerbitkan token pemulihan akun sekali pakai
+      responses:
+        '200':
+          description: Token pemulihan diterbitkan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+  /superadmin/assignments:
+    get:
+      summary: Daftar penugasan Guru BK
+      responses:
+        '200':
+          description: Daftar penugasan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+    post:
+      summary: Menambah/memperbarui penugasan Guru BK
+      responses:
+        '201':
+          description: Penugasan disimpan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /superadmin/students/{id}/data:
+    get:
+      summary: Membaca seluruh data pribadi siswa (termasuk jurnal & refleksi) dengan pencatatan audit wajib
+      responses:
+        '200':
+          description: Data siswa terdekripsi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+  /superadmin/content/articles:
+    get:
+      summary: Daftar seluruh artikel termasuk draft/in_review
+      responses:
+        '200':
+          description: Daftar artikel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+    post:
+      summary: Membuat draf artikel baru
+      responses:
+        '201':
+          description: Artikel dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /superadmin/content/articles/{id}/status:
+    patch:
+      summary: Transisi editorial teraudit; referensi peninjau wajib sebelum publikasi
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContentStatus'
+      responses:
+        '200':
+          description: Status diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '400':
+          description: Transisi atau referensi tidak valid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+  /superadmin/help-requests:
+    get:
+      summary: Antrean permintaan bantuan siswa untuk dikelola Superadmin
+      responses:
+        '200':
+          description: Antrean bantuan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+  /superadmin/help-requests/{id}/status:
+    patch:
+      summary: Memperbarui status permintaan bantuan (acknowledged / follow_up / closed)
+      responses:
+        '200':
+          description: Status bantuan diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+  /superadmin/help-requests/{id}/acknowledgement:
+    put:
+      summary: Menyimpan satu respons administratif berversi (tanpa chat konseling)
+      responses:
+        '200':
+          description: Respons administratif tersimpan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+  /superadmin/feedback:
+    get:
+      summary: Daftar pesan kelompok satu arah
+      responses:
+        '200':
+          description: Daftar pesan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+    post:
+      summary: Membuat/menerbitkan pesan kelompok satu arah
+      responses:
+        '201':
+          description: Pesan diterbitkan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /superadmin/settings:
+    get:
+      summary: Pengaturan sekolah dan riwayat kebijakan persetujuan
+      responses:
+        '200':
+          description: Pengaturan sekolah
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+    patch:
+      summary: Memperbarui konfigurasi sekolah, zona waktu, jam layanan, dan kebijakan wali
+      responses:
+        '200':
+          description: Pengaturan disimpan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /superadmin/audit:
+    get:
+      summary: Log peristiwa audit tersanitasi
+      responses:
+        '200':
+          description: Log audit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+  /superadmin/content/articles/{id}:
+    patch:
+      summary: Edit isi; versi naik, status draf dan review lama dicabut
+      responses:
+        '200':
+          description: Versi draf baru
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '409':
+          description: Versi telah berubah
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+  /superadmin/content/exercises:
+    get:
+      summary: get exercises
+      responses:
+        '200':
+          description: Konten sekolah, audit untuk mutasi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+    post:
+      summary: post exercises
+      responses:
+        '201':
+          description: Konten sekolah, audit untuk mutasi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /superadmin/content/exercises/{id}:
+    patch:
+      summary: Edit isi; versi naik, status draf dan review lama dicabut
+      responses:
+        '200':
+          description: Versi draf baru
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '409':
+          description: Versi telah berubah
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+  /superadmin/content/exercises/{id}/status:
+    patch:
+      summary: Transisi editorial teraudit; referensi peninjau wajib sebelum publikasi
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContentStatus'
+      responses:
+        '200':
+          description: Status diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '400':
+          description: Transisi atau referensi tidak valid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+  /superadmin/students/{id}/records/{domain}:
+    get:
+      summary: 'get data siswa: allowlist, sekolah, MFA dan audit'
+      description:
+        CRUD jurnal/mood/refleksi/tugas/langkah/jadwal/pengingat; sesi/skrining asli hanya GET dan DELETE.
+        Mutasi memerlukan reason; edit jurnal/refleksi memerlukan version. GET berpaginasi 20 entri.
+      responses:
+        '200':
+          description: Operasi berhasil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '400':
+          description: Validasi domain gagal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Role/MFA ditolak
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Siswa/entri di luar scope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Versi atau constraint unik konflik
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - sessionCookie: []
+    post:
+      summary: 'post data siswa: allowlist, sekolah, MFA dan audit'
+      description:
+        CRUD jurnal/mood/refleksi/tugas/langkah/jadwal/pengingat; sesi/skrining asli hanya GET dan DELETE.
+        Mutasi memerlukan reason; edit jurnal/refleksi memerlukan version. GET berpaginasi 20 entri.
+      responses:
+        '201':
+          description: Operasi berhasil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '400':
+          description: Validasi domain gagal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Role/MFA ditolak
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Siswa/entri di luar scope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Versi atau constraint unik konflik
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: domain
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+            - journals
+            - moods
+            - reflections
+            - tasks
+            - schedule-blocks
+            - reminders
+            - sessions
+            - screening
+  /superadmin/students/{id}/records/{domain}/{entryId}:
+    patch:
+      summary: 'patch data siswa: allowlist, sekolah, MFA dan audit'
+      description:
+        CRUD jurnal/mood/refleksi/tugas/langkah/jadwal/pengingat; sesi/skrining asli hanya GET dan DELETE.
+        Mutasi memerlukan reason; edit jurnal/refleksi memerlukan version. GET berpaginasi 20 entri.
+      responses:
+        '200':
+          description: Operasi berhasil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '400':
+          description: Validasi domain gagal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Role/MFA ditolak
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Siswa/entri di luar scope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Versi atau constraint unik konflik
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+    delete:
+      summary: 'delete data siswa: allowlist, sekolah, MFA dan audit'
+      description:
+        CRUD jurnal/mood/refleksi/tugas/langkah/jadwal/pengingat; sesi/skrining asli hanya GET dan DELETE.
+        Mutasi memerlukan reason; edit jurnal/refleksi memerlukan version. GET berpaginasi 20 entri.
+      responses:
+        '200':
+          description: Operasi berhasil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '400':
+          description: Validasi domain gagal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Role/MFA ditolak
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Siswa/entri di luar scope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Versi atau constraint unik konflik
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuditReason'
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: domain
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+            - journals
+            - moods
+            - reflections
+            - tasks
+            - schedule-blocks
+            - reminders
+            - sessions
+            - screening
+      - name: entryId
+        in: path
+        required: true
+        schema:
+          type: string
+  /superadmin/settings/consent-policies:
+    post:
+      summary: Aktifkan kebijakan baru dan invalidasi snapshot
+      responses:
+        '201':
+          description: Operasi berhasil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /superadmin/jobs/aggregate-weekly:
+    post:
+      summary: Hitung ulang tanggal Senin pada minggu selesai
+      responses:
+        '200':
+          description: Operasi berhasil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /superadmin/jobs/cleanup-retention:
+    post:
+      summary: Hapus aktivitas kedaluwarsa
+      responses:
+        '200':
+          description: Operasi berhasil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+  /superadmin/students/{id}/consents/guardian:
+    patch:
+      summary: Verifikasi wali dan invalidasi snapshot
+      responses:
+        '200':
+          description: Operasi berhasil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+  /superadmin/students/{id}/journals/{entryId}:
+    patch:
+      summary: Koreksi jurnal dengan version/reason dan audit
+      responses:
+        '200':
+          description: Operasi berhasil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+    delete:
+      summary: Hapus jurnal dan audit
+      responses:
+        '200':
+          description: Operasi berhasil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: entryId
+        in: path
+        required: true
+        schema:
+          type: string
+  /superadmin/students/{id}/reflections/{entryId}:
+    delete:
+      summary: Hapus refleksi dan audit
+      responses:
+        '200':
+          description: Operasi berhasil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      requestBody:
+        required: false
+        description:
+          Skema domain Zod adalah sumber validasi server. reason wajib pada mutasi /records; version
+          wajib saat edit jurnal/refleksi.
+        content:
+          application/json:
+            schema:
+              type: object
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: entryId
+        in: path
+        required: true
+        schema:
+          type: string
+  /superadmin/deletion-requests:
+    get:
+      summary: Pantau penghapusan
+      responses:
+        '200':
+          description: Operasi berhasil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+  /reminders/push/status:
+    get:
+      summary: L01 status langganan Web Push siswa dan public key VAPID
+      responses:
+        '200':
+          description: Daftar perangkat push aktif milik siswa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+  /reminders/push/subscriptions:
+    post:
+      summary: L01 mendaftarkan langganan Web Push opt-in (endpoint & kunci terenkripsi)
+      responses:
+        '201':
+          description: Langganan push tersimpan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+    delete:
+      summary: L01 mencabut seluruh langganan Web Push siswa
+      responses:
+        '200':
+          description: Seluruh langganan dicabut
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+  /reminders/push/test:
+    post:
+      summary: L01 uji pengiriman Web Push perangkat dengan hormat jam tenang dan naskah netral
+      responses:
+        '200':
+          description: Hasil uji perangkat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+  /exports/personal:
+    post:
+      summary: L04 ekspor data pribadi siswa (JSON/CSV) dengan autentikasi ulang kata sandi
+      responses:
+        '200':
+          description: Paket ekspor pribadi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+  /exports/bk-aggregate:
+    post:
+      summary: L04 ekspor agregat mingguan tersupresi (k >= 5) sesuai penugasan Guru BK dengan autentikasi ulang
+      responses:
+        '200':
+          description: Paket agregat tersupresi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+  /exports/superadmin-aggregate:
+    post:
+      summary: L04 ekspor agregat sekolah & ringkasan audit Superadmin dengan autentikasi ulang
+      responses:
+        '200':
+          description: Paket agregat dan audit tersanitasi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+  /superadmin/governance-reviews:
+    get:
+      summary: T73 daftar domain tinjauan ahli & pengelola sekolah beserta status kesiapan gerbang pilot
+      responses:
+        '200':
+          description: Daftar domain tinjauan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+  /superadmin/governance-reviews/{id}:
+    patch:
+      summary: T73 mencatat keputusan/revisi tinjauan ahli atau pengelola sekolah secara teraudit
+      responses:
+        '200':
+          description: Catatan tinjauan diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+  /superadmin/capacity:
+    get:
+      summary: L05 telemetri pool PostgreSQL, kuota siswa sekolah, dan volume data
+      responses:
+        '200':
+          description: Ringkasan kapasitas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+  /superadmin/schools:
+    get:
+      summary: L05 daftar sekolah terdaftar
+      responses:
+        '200':
+          description: Daftar tenant sekolah
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+    post:
+      summary: L05 provisioning sekolah mitra baru beserta kebijakan, domain tinjauan T73, dan admin awal
+      responses:
+        '201':
+          description: Sekolah baru dibuat bersama token aktivasi sekali pakai
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+      security:
+        - sessionCookie: []
+          csrfToken: []
+  /superadmin/registrations:
+    get:
+      summary: Antrean pendaftaran siswa milik ruang layanan Superadmin
+      security:
+        - sessionCookie: []
+      parameters:
+        - { name: page, in: query, schema: { type: integer, minimum: 1 } }
+      responses:
+        '200':
+          { description: Pendaftaran menunggu persetujuan tanpa sandi atau hash; 20 per halaman }
+        '401': { description: Belum masuk }
+        '403': { description: Hanya Superadmin }
+  /superadmin/users/{id}/registration-review:
+    post:
+      summary: Menyetujui dan mengaktifkan atau menolak pendaftaran siswa
+      security:
+        - sessionCookie: []
+          csrfToken: []
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [decision]
+              properties:
+                decision: { type: string, enum: [approve, reject] }
+      responses:
+        '200':
+          { description: Keputusan disimpan dan diaudit; tidak membuat persetujuan data pribadi }
+        '400': { description: Data tidak lengkap }
+        '403': { description: Tidak berwenang atau CSRF tidak valid }
+        '404': { description: Pendaftaran tidak ditemukan dalam ruang layanan ini }
+        '409': { description: Pendaftaran sudah ditinjau }
+components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: tenangin.sid
+    csrfToken:
+      type: apiKey
+      in: header
+      name: x-csrf-token
+  schemas:
+    Success:
+      type: object
+      required:
+        - ok
+        - data
+      properties:
+        ok:
+          const: true
+        data: {}
+    Error:
+      type: object
+      required:
+        - ok
+        - error
+      properties:
+        ok:
+          const: false
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            field_errors:
+              type:
+                - object
+                - 'null'
+            request_id:
+              type: string
+    ContentStatus:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          enum:
+            - draft
+            - in_review
+            - approved
+            - published
+            - archived
+        reviewerRef:
+          type:
+            - string
+            - 'null'
+        version:
+          type: integer
+          minimum: 1
+    AuditReason:
+      type: object
+      required:
+        - reason
+      properties:
+        reason:
+          type: string
+          minLength: 3
+          maxLength: 200

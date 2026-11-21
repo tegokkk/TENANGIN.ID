@@ -1,0 +1,39 @@
+{
+  "name": "tenangin-id",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TENANGIN.ID - Website Manajemen Stres Akademik dan Regulasi Emosi Siswa SMA/MA",
+  "engines": {
+    "node": "24.x"
+  },
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev:backend": "npm run dev --workspace backend",
+    "dev:frontend": "npm run dev --workspace frontend",
+    "dev:worker": "npm run worker --workspace backend",
+    "build": "npm run build --workspace frontend",
+    "vercel:check": "node backend/scripts/vercel-preflight.mjs",
+    "bootstrap:production": "node backend/scripts/production.mjs bootstrap",
+    "test": "npm run test --workspace backend && npm run test --workspace frontend",
+    "test:backend": "npm run test --workspace backend",
+    "test:frontend": "npm run test --workspace frontend",
+    "test:e2e": "npm run test:e2e --workspace frontend",
+    "lint": "npm run lint --workspace backend && npm run lint --workspace frontend",
+    "format": "prettier --write \"backend/src/**/*.js\" \"backend/database/**/*.js\" \"frontend/src/**/*.{js,jsx,css}\"",
+    "db:migrate": "npm run db:migrate --workspace backend",
+    "pg:init": "node backend/scripts/local-pg.mjs init",
+    "pg:start": "node backend/scripts/local-pg.mjs start",
+    "pg:stop": "node backend/scripts/local-pg.mjs stop",
+    "pg:status": "node backend/scripts/local-pg.mjs status",
+    "start:production": "node backend/scripts/production.mjs",
+    "worker:production": "node backend/scripts/production.mjs worker",
+    "db:migrate:production": "node backend/scripts/production.mjs migrate",
+    "db:seed:test": "npm run db:seed:test --workspace backend"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.2"
+  }
+}

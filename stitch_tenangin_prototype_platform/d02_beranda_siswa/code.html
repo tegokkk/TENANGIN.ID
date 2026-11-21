@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+
+<html lang="id"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><title>TENANGIN.ID Siswa</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"secondary-container":"#c6f33a","primary-fixed-dim":"#d2bbff","tertiary-container":"#5b5869","outline-variant":"#ccc3d6","on-error-container":"#93000a","inverse-primary":"#d2bbff","inverse-on-surface":"#f4f1e7","on-tertiary-container":"#d5cfe3","primary-fixed":"#eaddff","on-secondary-fixed-variant":"#3b4d00","on-primary-fixed-variant":"#5816ba","on-secondary-container":"#556d00","primary":"#550db7","secondary":"#506600","error":"#ba1a1a","on-primary":"#ffffff","inverse-surface":"#31312a","surface-container-low":"#f6f4ea","on-tertiary-fixed-variant":"#484554","on-secondary":"#ffffff","on-surface":"#1c1c16","on-secondary-fixed":"#161f00","on-surface-variant":"#4a4454","surface-container":"#f1eee4","on-error":"#ffffff","surface-dim":"#dcdad1","secondary-fixed-dim":"#abd615","on-primary-container":"#ddcaff","surface-container-highest":"#e5e2d9","on-background":"#1c1c16","surface-container-lowest":"#ffffff","secondary-fixed":"#c6f33a","surface-tint":"#713ad3","tertiary-fixed-dim":"#c9c4d7","outline":"#7b7485","on-tertiary-fixed":"#1c1a28","tertiary":"#444150","primary-container":"#6d35cf","surface-container-high":"#ebe8de","on-tertiary":"#ffffff","surface-bright":"#fcf9ef","background":"#fcf9ef","error-container":"#ffdad6","tertiary-fixed":"#e5e0f3","surface-variant":"#e5e2d9","surface":"#fcf9ef","on-primary-fixed":"#25005a"},borderRadius:{DEFAULT:"0.25rem",lg:"0.5rem",xl:"0.75rem",full:"9999px"},spacing:{"space-xl":"2rem","space-2xl":"3rem","margin-mobile":"1rem","space-xs":"0.25rem","space-lg":"1.5rem",gutter:"1.5rem",margin:"2rem","space-md":"1rem","gutter-mobile":"1rem","space-sm":"0.5rem"},fontFamily:{"headline-lg-mobile":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"title-md":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"display-lg":["Plus Jakarta Sans"],"body-lg-bold":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"],"body-lg":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"display-lg-mobile":["Plus Jakarta Sans"]},fontSize:{"headline-lg-mobile":["24px",{lineHeight:"32px",fontWeight:"700"}],"headline-lg":["32px",{lineHeight:"42px",letterSpacing:"-0.01em",fontWeight:"700"}],"title-md":["18px",{lineHeight:"26px",fontWeight:"600"}],"body-md":["14px",{lineHeight:"22px",fontWeight:"400"}],"display-lg":["48px",{lineHeight:"58px",letterSpacing:"-0.02em",fontWeight:"800"}],"body-lg-bold":["16px",{lineHeight:"26px",fontWeight:"600"}],"headline-md":["24px",{lineHeight:"32px",letterSpacing:"-0.005em",fontWeight:"700"}],"label-sm":["12px",{lineHeight:"16px",letterSpacing:"0.02em",fontWeight:"600"}],"label-md":["14px",{lineHeight:"20px",fontWeight:"600"}],"body-lg":["16px",{lineHeight:"26px",fontWeight:"400"}],"headline-sm":["20px",{lineHeight:"28px",fontWeight:"600"}],"display-lg-mobile":["32px",{lineHeight:"40px",letterSpacing:"-0.01em",fontWeight:"800"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-low z-50 flex flex-col pt-space-lg pb-space-xl shadow-[0_1px_8px_rgba(109,53,207,0.04)]"><div class="px-space-lg mb-space-xl flex items-center gap-space-xs"><span class="w-9 h-9 rounded-xl bg-primary-container flex items-center justify-center text-on-primary font-headline-md font-bold leading-none">T</span><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary font-bold leading-tight">TENANGIN</span><span class="font-label-sm text-label-sm text-on-surface-variant font-medium leading-none">Ruang Siswa</span></div></div><div class="px-space-md mb-space-md"><div class="bg-surface-container-lowest rounded-xl p-space-sm flex items-center gap-space-sm shadow-[0_1px_4px_rgba(109,53,207,0.03)]"><div class="w-7 h-7 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold font-label-sm text-label-sm">A</div><div class="flex flex-col overflow-hidden"><span class="font-body-lg-bold text-label-md text-on-surface truncate">Awan-028</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-none">Siswa SMA Aktif</span></div></div></div><nav class="flex-1 px-space-md flex flex-col gap-space-xs" data-active-classes="bg-primary-container text-on-primary font-semibold shadow-[0_4px_12px_rgba(109,53,207,0.18)]"><a aria-current="page" class="flex items-center px-space-md py-space-sm rounded-xl transition-all gap-space-sm bg-primary-container text-on-primary font-semibold shadow-[0_4px_12px_rgba(109,53,207,0.18)]" data-path="beranda-siswa" href="#"><span class="material-symbols-outlined text-[20px]">home</span>Beranda</a><a class="flex items-center px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all gap-space-sm font-label-md text-label-md" data-path="tenang" href="#"><span class="material-symbols-outlined text-[20px]">self_improvement</span>Tenang</a><a class="flex items-center px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all gap-space-sm font-label-md text-label-md" data-path="catat" href="#"><span class="material-symbols-outlined text-[20px]">edit_note</span>Catat</a><a class="flex items-center px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all gap-space-sm font-label-md text-label-md" data-path="refleksi" href="#"><span class="material-symbols-outlined text-[20px]">insights</span>Refleksi</a><a class="flex items-center px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all gap-space-sm font-label-md text-label-md" data-path="bantuan" href="#"><span class="material-symbols-outlined text-[20px]">support_agent</span>Bantuan</a></nav><div class="px-space-md mt-auto"><div class="bg-surface-container-lowest p-space-md rounded-2xl flex flex-col gap-space-xs"><div class="flex items-center gap-space-xs text-secondary"><span class="material-symbols-outlined text-[18px]">verified_user</span><span class="font-label-sm text-label-sm font-semibold">Koneksi Aman</span></div><p class="font-label-sm text-label-sm text-on-surface-variant leading-snug">Identitas dan catatan harian teranonimkan secara ketat.</p></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface/85 backdrop-blur-xl z-40 px-space-xl flex items-center justify-between shadow-[0_1px_8px_rgba(109,53,207,0.03)]"><nav class="flex items-center gap-space-xs" data-active-classes="bg-primary-fixed text-on-primary-fixed-variant font-body-lg-bold"><a aria-current="page" class="px-space-md py-space-xs rounded-full transition-colors bg-primary-fixed text-on-primary-fixed-variant font-body-lg-bold" data-path="beranda-siswa" href="#">Beranda</a><a class="px-space-md py-space-xs rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="tenang" href="#">Tenang</a><a class="px-space-md py-space-xs rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="catat" href="#">Catat</a><a class="px-space-md py-space-xs rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="refleksi" href="#">Refleksi</a></nav><div class="flex items-center gap-space-md"><div class="hidden lg:flex items-center gap-space-xs bg-surface-container-low px-space-sm py-space-xs rounded-full font-label-sm text-label-sm text-on-surface-variant"><span class="w-2 h-2 rounded-full bg-secondary-fixed-dim"></span><span>BK Online: 07.30 - 15.30 WIB</span></div><a class="px-space-md py-space-xs rounded-xl bg-secondary-fixed text-on-secondary-fixed font-body-lg-bold text-label-md hover:bg-secondary-fixed-dim transition-colors shadow-[0_4px_14px_-2px_rgba(80,102,0,0.22)] flex items-center gap-space-xs" data-path="bantuan" href="#"><span class="material-symbols-outlined text-[16px]">chat_bubble</span><span>Butuh bicara?</span></a><div class="flex items-center gap-space-xs bg-surface-container-lowest py-space-xs px-space-sm rounded-full"><span class="font-label-sm text-label-sm font-semibold text-on-surface">Awan-028</span><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="relative pt-16 bg-surface min-h-[calc(100vh-4rem)] w-full px-space-xl pb-space-2xl"><div class="flex flex-col w-full">
+<!-- Subtle decorative ambient orbs -->
+<div class="relative w-full">
+<div class="absolute -top-10 right-20 w-80 h-80 rounded-full bg-primary-fixed/30 blur-3xl pointer-events-none -z-10"></div>
+<div class="absolute top-72 -left-10 w-96 h-96 rounded-full bg-secondary-fixed/25 blur-3xl pointer-events-none -z-10"></div>
+<!-- 1. Header Sapaan Personal Ramah -->
+<header class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md mb-space-xl">
+<div class="flex flex-col gap-space-xs max-w-2xl">
+<div class="flex items-center gap-space-xs">
+<span class="inline-flex items-center gap-1.5 px-space-sm py-0.5 rounded-full bg-surface-container-high text-primary font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+            Ruang Aman Siswa
+          </span>
+<span class="text-on-surface-variant font-label-sm text-label-sm font-semibold tracking-wide">
+            Rabu, 20 November 2026 • Semester Ganjil
+          </span>
+</div>
+<h1 class="font-display-lg text-display-lg text-on-surface tracking-tight">
+          Halo, <span class="text-primary font-display-lg text-display-lg">Awan-028</span> <span class="inline-block animate-bounce">👋</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+          Senang melihatmu kembali. Hari ini tidak perlu terburu-buru, mari dengarkan dirimu terlebih dahulu.
+        </p>
+</div>
+<!-- Quick Session Indicator Card -->
+<div class="bg-surface-container-lowest shadow-[0_4px_20px_-2px_rgba(109,53,207,0.04)] rounded-2xl p-space-md flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[26px]">spa</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Kondisi Mental Terakhir</span>
+<span class="font-body-lg-bold text-body-lg-bold text-on-surface">Tenang &amp; Terkendali</span>
+<span class="font-label-sm text-label-sm text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> 2 sesi latihan selesai pekan ini
+          </span>
+</div>
+</div>
+</header>
+<!-- Bento Grid Section: Mood & Quick Action Hero -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg mb-space-2xl">
+<!-- 2. Kartu Cek Suasana Hati Harian (8 Kolom) -->
+<div class="lg:col-span-8 bg-surface-container-lowest shadow-[0_4px_24px_-4px_rgba(109,53,207,0.06)] rounded-[24px] p-space-xl flex flex-col justify-between relative overflow-hidden">
+<div class="flex flex-col gap-space-xs mb-space-lg">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[24px]">favorite</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Bagaimana perasaanmu hari ini?</h2>
+</div>
+<span class="font-label-sm text-label-sm px-space-sm py-1 rounded-full bg-surface-container text-on-surface-variant">Check-in Harian</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Pilihlah yang paling mendekati hatimu saat ini. Jawabanmu sepenuhnya rahasia dan membantumu menyadari beban pikiran.
+          </p>
+</div>
+<!-- 5 Pilihan Mood Chips -->
+<div class="grid grid-cols-2 sm:grid-cols-5 gap-space-sm mb-space-xl" id="moodSelectorGroup">
+<!-- 1. Sangat Berat -->
+<button class="mood-pill group flex flex-col items-center justify-center p-space-md rounded-2xl bg-surface-container-low hover:bg-surface-container-high transition-all text-center gap-space-xs focus:outline-none" onclick="selectMood(this, 'Sangat Berat', 9)" type="button">
+<span class="text-3xl filter transition-transform group-hover:scale-125">🌧️</span>
+<span class="font-label-md text-label-md text-on-surface-variant group-hover:text-on-surface font-semibold">Sangat Berat</span>
+<span class="font-label-sm text-label-sm text-outline">Perlu jeda</span>
+</button>
+<!-- 2. Cemas / Lelah -->
+<button class="mood-pill group flex flex-col items-center justify-center p-space-md rounded-2xl bg-surface-container-low hover:bg-surface-container-high transition-all text-center gap-space-xs focus:outline-none" onclick="selectMood(this, 'Cemas / Lelah', 7)" type="button">
+<span class="text-3xl filter transition-transform group-hover:scale-125">🌪️</span>
+<span class="font-label-md text-label-md text-on-surface-variant group-hover:text-on-surface font-semibold">Cemas / Lelah</span>
+<span class="font-label-sm text-label-sm text-outline">Beban tinggi</span>
+</button>
+<!-- 3. Biasa Saja -->
+<button class="mood-pill group flex flex-col items-center justify-center p-space-md rounded-2xl bg-surface-container-low hover:bg-surface-container-high transition-all text-center gap-space-xs focus:outline-none" onclick="selectMood(this, 'Biasa Saja', 5)" type="button">
+<span class="text-3xl filter transition-transform group-hover:scale-125">🌤️</span>
+<span class="font-label-md text-label-md text-on-surface-variant group-hover:text-on-surface font-semibold">Biasa Saja</span>
+<span class="font-label-sm text-label-sm text-outline">Netral aman</span>
+</button>
+<!-- 4. Tenang / Lega (Default Terpilih) -->
+<button class="mood-pill selected-mood group flex flex-col items-center justify-center p-space-md rounded-2xl bg-primary-fixed text-primary transition-all text-center gap-space-xs shadow-[0_4px_12px_rgba(109,53,207,0.12)] focus:outline-none ring-2 ring-primary" onclick="selectMood(this, 'Tenang / Lega', 4)" type="button">
+<span class="text-3xl filter transition-transform group-hover:scale-125">🍃</span>
+<span class="font-label-md text-label-md text-primary font-bold">Tenang / Lega</span>
+<span class="font-label-sm text-label-sm text-on-primary-fixed-variant">Napas plong</span>
+</button>
+<!-- 5. Bersemangat -->
+<button class="mood-pill group flex flex-col items-center justify-center p-space-md rounded-2xl bg-surface-container-low hover:bg-surface-container-high transition-all text-center gap-space-xs focus:outline-none col-span-2 sm:col-span-1" onclick="selectMood(this, 'Bersemangat', 2)" type="button">
+<span class="text-3xl filter transition-transform group-hover:scale-125">✨</span>
+<span class="font-label-md text-label-md text-on-surface-variant group-hover:text-on-surface font-semibold">Bersemangat</span>
+<span class="font-label-sm text-label-sm text-outline">Penuh energi</span>
+</button>
+</div>
+<!-- Skala Tekanan Subjektif Opsional -->
+<div class="bg-surface-container-low rounded-2xl p-space-md mb-space-lg">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-xs mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[20px] text-tertiary">tune</span>
+<span class="font-body-lg-bold text-body-lg-bold text-on-surface">Skala Tekanan Belajar Subjektif</span>
+</div>
+<div class="inline-flex items-center gap-1.5 px-space-md py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-md text-label-md">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span id="pressureLabelText">Tingkat tekanan belajar: Sedang (4/10)</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md pt-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant font-semibold">0 (Ringan Sekali)</span>
+<input class="w-full accent-primary cursor-pointer h-2 bg-outline-variant rounded-lg" id="pressureSlider" max="10" min="0" oninput="updatePressure(this.value)" type="range" value="4"/>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-semibold">10 (Kewalahan)</span>
+</div>
+</div>
+<!-- Tombol Aksi Mood & Status Inline -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md pt-space-sm">
+<div class="flex items-center gap-space-xs text-on-surface-variant" id="moodStatusBadge">
+<span class="material-symbols-outlined text-secondary text-[20px]">task_alt</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Tersimpan untuk hari ini pukul 08:30 WIB</span>
+</div>
+<div class="flex items-center gap-space-sm justify-end">
+<button class="px-space-md py-space-sm rounded-xl font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" onclick="skipMood()" type="button">
+              Lewati hari ini
+            </button>
+<button class="px-space-lg py-space-sm rounded-xl bg-primary text-on-primary font-body-lg-bold text-label-md hover:bg-primary-container transition-all shadow-[0_4px_14px_rgba(109,53,207,0.24)] flex items-center gap-space-xs" onclick="saveMood()" type="button">
+<span class="material-symbols-outlined text-[18px]">check</span>
+<span>Simpan Suasana Hati</span>
+</button>
+</div>
+</div>
+</div>
+<!-- 3. Banner Aksi Cepat Lime Cerah (4 Kolom) -->
+<div class="lg:col-span-4 bg-secondary-fixed text-on-secondary-fixed rounded-[24px] p-space-xl flex flex-col justify-between shadow-[0_8px_28px_rgba(198,243,58,0.3)] relative overflow-hidden group">
+<!-- Background subtle glow -->
+<div class="absolute -right-12 -bottom-12 w-48 h-48 rounded-full bg-secondary-fixed-dim/40 blur-2xl group-hover:scale-125 transition-transform duration-700 pointer-events-none"></div>
+<div>
+<div class="flex items-center justify-between mb-space-md">
+<span class="inline-flex items-center gap-1.5 px-space-sm py-1 rounded-full bg-on-secondary-fixed/10 font-label-sm text-label-sm font-bold uppercase tracking-wider">
+<span class="material-symbols-outlined text-[16px]">air</span> Jeda Sadar
+            </span>
+<span class="font-label-sm text-label-sm font-semibold text-on-secondary-fixed/80">3 Menit Saja</span>
+</div>
+<h3 class="font-headline-md text-headline-md font-bold mb-space-sm leading-snug">
+            Ambil jeda 3 menit bersama latihan napas terpandu.
+          </h3>
+<p class="font-body-md text-body-md text-on-secondary-fixed/90 leading-relaxed mb-space-lg">
+            Tenangkan ritme detak jantung dan kembalikan fokus belajar sebelum beralih ke tugas selanjutnya.
+          </p>
+<!-- Visual Breathing Cycle Mini Art -->
+<div class="w-full bg-on-secondary-fixed/5 rounded-2xl p-space-md mb-space-md flex items-center justify-around">
+<div class="flex flex-col items-center">
+<span class="font-label-sm text-label-sm font-bold text-on-secondary-fixed">Tarik</span>
+<span class="font-label-sm text-label-sm text-on-secondary-fixed/70">4 dtk</span>
+</div>
+<span class="material-symbols-outlined text-[16px] text-on-secondary-fixed/40">arrow_forward</span>
+<div class="flex flex-col items-center">
+<span class="font-label-sm text-label-sm font-bold text-on-secondary-fixed">Tahan</span>
+<span class="font-label-sm text-label-sm text-on-secondary-fixed/70">4 dtk</span>
+</div>
+<span class="material-symbols-outlined text-[16px] text-on-secondary-fixed/40">arrow_forward</span>
+<div class="flex flex-col items-center">
+<span class="font-label-sm text-label-sm font-bold text-on-secondary-fixed">Hembus</span>
+<span class="font-label-sm text-label-sm text-on-secondary-fixed/70">4 dtk</span>
+</div>
+</div>
+</div>
+<a class="w-full py-space-md px-space-lg rounded-xl bg-primary text-on-primary font-body-lg-bold text-label-md flex items-center justify-center gap-space-xs hover:bg-primary-container transition-all shadow-[0_6px_18px_rgba(85,13,183,0.35)]" data-path="tenang" href="#">
+<span class="material-symbols-outlined text-[20px]">play_circle</span>
+<span>Mulai Latihan Napas</span>
+</a>
+</div>
+</div>
+<!-- 4. Rencana Hari Ini (Manajemen Tugas Belajar Ringkas) & Side Info Bento -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg mb-space-2xl">
+<!-- To-Do Section (8 Kolom) -->
+<div class="lg:col-span-8 bg-surface-container-lowest shadow-[0_4px_20px_-2px_rgba(109,53,207,0.04)] rounded-[24px] p-space-xl flex flex-col justify-between">
+<div>
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-xs mb-space-md">
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[24px]">checklist</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Rencana Hari Ini</h2>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                Langkah terukur tanpa beban berlebih. Kerjakan satu demi satu dengan tenang.
+              </p>
+</div>
+<div class="flex items-center gap-space-xs bg-surface-container-low px-space-sm py-1 rounded-full text-on-surface font-label-sm text-label-sm">
+<span class="font-bold text-primary" id="completedCounter">0</span> dari <span class="font-bold">3</span> langkah selesai
+            </div>
+</div>
+<!-- Task List -->
+<div class="flex flex-col gap-space-sm mb-space-lg" id="taskListContainer">
+<!-- Tugas 1 -->
+<div class="task-card flex items-start gap-space-md p-space-md rounded-2xl bg-surface-container-low hover:bg-surface-container transition-colors group">
+<label class="relative flex items-center cursor-pointer pt-0.5">
+<input class="peer sr-only" onchange="toggleTask(this)" type="checkbox"/>
+<div class="w-6 h-6 rounded-lg bg-surface-container-lowest flex items-center justify-center text-transparent peer-checked:bg-primary peer-checked:text-on-primary transition-all">
+<span class="material-symbols-outlined text-[16px] font-bold">check</span>
+</div>
+</label>
+<div class="flex-1 flex flex-col sm:flex-row sm:items-center justify-between gap-space-xs">
+<div class="flex flex-col">
+<span class="task-title font-body-lg-bold text-body-lg-bold text-on-surface transition-all">Pecah ringkasan Fisika Bab 4 menjadi 2 sub-bab</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Fokus pada rumus gaya gerak &amp; latihan soal nomor 1-3</span>
+</div>
+<div class="flex items-center gap-space-xs shrink-0">
+<span class="px-space-sm py-0.5 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm">Prioritas: Penting</span>
+<span class="px-space-sm py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span> Target: 16:00
+                  </span>
+</div>
+</div>
+</div>
+<!-- Tugas 2: Blok Jeda Pribadi -->
+<div class="task-card flex items-start gap-space-md p-space-md rounded-2xl bg-secondary-container/20 hover:bg-secondary-container/30 transition-colors group">
+<label class="relative flex items-center cursor-pointer pt-0.5">
+<input class="peer sr-only" onchange="toggleTask(this)" type="checkbox"/>
+<div class="w-6 h-6 rounded-lg bg-surface-container-lowest flex items-center justify-center text-transparent peer-checked:bg-secondary peer-checked:text-on-secondary transition-all">
+<span class="material-symbols-outlined text-[16px] font-bold">check</span>
+</div>
+</label>
+<div class="flex-1 flex flex-col sm:flex-row sm:items-center justify-between gap-space-xs">
+<div class="flex flex-col">
+<span class="task-title font-body-lg-bold text-body-lg-bold text-on-surface transition-all">Istirahat sejenak 15 menit tanpa layar gawai</span>
+<span class="font-label-sm text-label-sm text-on-secondary-container">Minum air putih, stretching leher, atau melihat jendela</span>
+</div>
+<div class="flex items-center gap-space-xs shrink-0">
+<span class="px-space-sm py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-[14px]">self_improvement</span> Blok Jeda Pribadi
+                  </span>
+</div>
+</div>
+</div>
+<!-- Tugas 3 -->
+<div class="task-card flex items-start gap-space-md p-space-md rounded-2xl bg-surface-container-low hover:bg-surface-container transition-colors group">
+<label class="relative flex items-center cursor-pointer pt-0.5">
+<input class="peer sr-only" onchange="toggleTask(this)" type="checkbox"/>
+<div class="w-6 h-6 rounded-lg bg-surface-container-lowest flex items-center justify-center text-transparent peer-checked:bg-primary peer-checked:text-on-primary transition-all">
+<span class="material-symbols-outlined text-[16px] font-bold">check</span>
+</div>
+</label>
+<div class="flex-1 flex flex-col sm:flex-row sm:items-center justify-between gap-space-xs">
+<div class="flex flex-col">
+<span class="task-title font-body-lg-bold text-body-lg-bold text-on-surface transition-all">Latihan 5 soal Kimia Mandiri</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Topik larutan asam-basa untuk ulangan harian Jumat</span>
+</div>
+<div class="flex items-center gap-space-xs shrink-0">
+<span class="px-space-sm py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm">Status: Belum dimulai</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Inline Task Input Form -->
+<form class="pt-space-sm" onsubmit="addTask(event)">
+<div class="flex flex-col sm:flex-row items-center gap-space-sm bg-surface-container-low p-space-xs rounded-2xl">
+<div class="flex-1 flex items-center px-space-sm w-full">
+<span class="material-symbols-outlined text-outline mr-space-xs text-[20px]">add_task</span>
+<input class="w-full bg-transparent border-0 focus:outline-none font-body-md text-body-md text-on-surface placeholder:text-outline py-2" id="newTaskInput" placeholder="+ Tambah langkah belajar hari ini..." type="text"/>
+</div>
+<div class="flex items-center gap-space-xs w-full sm:w-auto justify-end px-space-xs">
+<div class="flex items-center gap-1 bg-surface-container-lowest px-space-sm py-1.5 rounded-xl text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">timer</span>
+<input class="w-16 bg-transparent text-center font-label-md text-label-md focus:outline-none text-on-surface placeholder:text-outline" id="newTaskMinutes" max="180" min="5" placeholder="Menit" type="number"/>
+<span class="font-label-sm text-label-sm">mnt</span>
+</div>
+<button class="px-space-md py-2 rounded-xl bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-container transition-colors whitespace-nowrap" type="submit">
+                Tambah
+              </button>
+</div>
+</div>
+</form>
+</div>
+<!-- Right Column: Visual Mindful Graphic & Quick Anchor (4 Kolom) -->
+<div class="lg:col-span-4 flex flex-col gap-space-lg">
+<!-- Visual Mood Sparkline / Mini Donut Chart Card -->
+<div class="bg-surface-container-lowest shadow-[0_4px_20px_-2px_rgba(109,53,207,0.04)] rounded-[24px] p-space-lg flex flex-col justify-between">
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-body-lg-bold text-body-lg-bold text-on-surface">Keseimbangan Pekan Ini</span>
+<span class="material-symbols-outlined text-primary text-[20px]">monitoring</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-space-md">
+            Pola ketenanganmu stabil di zona hijau-ungu selama 5 hari terakhir.
+          </p>
+<!-- Inline SVG Visual Progress Ring / Chart -->
+<div class="flex items-center justify-center py-space-sm">
+<div class="relative flex items-center justify-center">
+<svg class="w-36 h-36 transform -rotate-90" viewbox="0 0 120 120">
+<circle class="stroke-surface-container-high" cx="60" cy="60" fill="none" r="50" stroke-width="12"></circle>
+<circle class="stroke-primary" cx="60" cy="60" fill="none" r="50" stroke-dasharray="314" stroke-dashoffset="85" stroke-linecap="round" stroke-width="12"></circle>
+<circle class="stroke-secondary-fixed" cx="60" cy="60" fill="none" r="50" stroke-dasharray="314" stroke-dashoffset="230" stroke-linecap="round" stroke-width="12"></circle>
+</svg>
+<div class="absolute flex flex-col items-center justify-center text-center">
+<span class="font-headline-md text-headline-md font-extrabold text-on-surface">73%</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Harmonis</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-space-xs mt-space-sm pt-space-xs">
+<div class="bg-surface-container-low p-space-xs rounded-xl flex items-center gap-space-xs">
+<div class="w-3 h-3 rounded-full bg-primary shrink-0"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant truncate">Refleksi Belajar</span>
+</div>
+<div class="bg-surface-container-low p-space-xs rounded-xl flex items-center gap-space-xs">
+<div class="w-3 h-3 rounded-full bg-secondary-fixed shrink-0"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant truncate">Jeda Napas</span>
+</div>
+</div>
+</div>
+<!-- Atmospheric Quote Mini Banner -->
+<div class="bg-primary text-on-primary rounded-[24px] p-space-lg relative overflow-hidden flex flex-col justify-between flex-1">
+<div class="relative z-10">
+<div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center mb-space-sm">
+<span class="material-symbols-outlined text-[18px]">format_quote</span>
+</div>
+<p class="font-body-md text-body-md italic leading-relaxed text-on-primary/95 mb-space-sm">
+              “Belajar bukan perlombaan lari cepat, melainkan perjalanan mengenali rasa ingin tahu tanpa menyiksa diri.”
+            </p>
+</div>
+<span class="font-label-sm text-label-sm text-on-primary-container font-semibold relative z-10">
+            Pesan Guru BK untuk Kelas XII
+          </span>
+<div class="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-white/5 blur-xl pointer-events-none"></div>
+</div>
+</div>
+</div>
+<!-- 5. Seksi Pengingat & Pesan Pengelola & 6. Skrining Mandiri (Split Grid) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg">
+<!-- 5. Pengingat & Pesan Pengelola (7 Kolom) -->
+<div class="lg:col-span-7 flex flex-col gap-space-md">
+<!-- Kotak Pengingat Harian -->
+<div class="bg-surface-container-lowest shadow-[0_4px_20px_-2px_rgba(109,53,207,0.04)] rounded-[24px] p-space-lg flex items-center justify-between gap-space-md">
+<div class="flex items-start gap-space-md">
+<div class="w-11 h-11 rounded-2xl bg-surface-container-high flex items-center justify-center text-on-surface shrink-0">
+<span class="material-symbols-outlined text-[24px]">notifications_paused</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-lg-bold text-body-lg-bold text-on-surface">Pengingat jeda belajar harian</span>
+<p class="font-body-md text-body-md text-on-surface-variant leading-snug">
+                Notifikasi pop-up pengingat istirahat saat membuka modul atau catatan belajar.
+              </p>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1" id="reminderStatusText">
+                Status: Nonaktif - Aktif saat aplikasi dibuka
+              </span>
+</div>
+</div>
+<!-- Toggle Switch (Default OFF) -->
+<label class="relative inline-flex items-center cursor-pointer shrink-0">
+<input class="sr-only peer" id="reminderSwitch" onchange="toggleReminder(this)" type="checkbox"/>
+<div class="w-14 h-8 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<!-- Kotak Pesan Kelompok Satu Arah (Superadmin / BK) -->
+<div class="bg-surface-container-lowest shadow-[0_4px_20px_-2px_rgba(109,53,207,0.04)] rounded-[24px] p-space-lg flex flex-col gap-space-sm relative">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs text-primary">
+<span class="material-symbols-outlined text-[20px]">campaign</span>
+<span class="font-label-md text-label-md font-bold uppercase tracking-wider">Pesan Pengelola BK &amp; Superadmin</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Kemarin, 14:15 WIB</span>
+</div>
+<div class="bg-surface-container-low rounded-2xl p-space-md flex flex-col gap-space-xs">
+<p class="font-body-md text-body-md text-on-surface font-medium leading-relaxed">
+              “Pekan persiapan ujian: ingat untuk menjaga waktu tidur 7 jam dan minum air putih yang cukup.”
+            </p>
+<div class="flex items-center gap-space-xs mt-1">
+<div class="w-5 h-5 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold text-[10px]">BK</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-semibold">Ibu Nurul, S.Pd., Kons. • Guru BK Kelas XII</span>
+</div>
+</div>
+</div>
+</div>
+<!-- 6. Seksi Skrining Mandiri Opsional (5 Kolom) -->
+<div class="lg:col-span-5 bg-surface-container-lowest shadow-[0_4px_20px_-2px_rgba(109,53,207,0.04)] rounded-[24px] p-space-xl flex flex-col justify-between">
+<div class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs text-on-surface">
+<span class="material-symbols-outlined text-outline text-[22px]">assignment</span>
+<h3 class="font-headline-sm text-headline-sm">Skrining Mandiri Opsional</h3>
+</div>
+<span class="px-space-sm py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">
+              Edukasi
+            </span>
+</div>
+<!-- Transparan & Bersih: Menunggu Penetapan Ahli -->
+<div class="bg-surface-container-low rounded-2xl p-space-md flex flex-col gap-space-xs my-space-xs">
+<div class="flex items-center gap-space-xs text-outline">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span class="font-label-sm text-label-sm font-semibold">Skrining Mandiri Terstandar</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              Instrumen belum tersedia - Menunggu penetapan ahli sekolah.
+            </p>
+<p class="font-label-sm text-label-sm text-outline leading-normal pt-1">
+              TENANGIN.ID tidak menampilkan skor diagnosis mental sembarangan tanpa validasi psikometrik resmi dari konselor sekolah.
+            </p>
+</div>
+</div>
+<div class="pt-space-md flex flex-col gap-space-xs">
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>Standar Alat Ukur:</span>
+<span class="font-semibold text-on-surface">DASS-21 / PHQ-9 (Proses Kurasi)</span>
+</div>
+<button class="w-full py-space-sm px-space-md rounded-xl bg-surface-container-high text-outline cursor-not-allowed font-label-md text-label-md flex items-center justify-center gap-space-xs" disabled="" type="button">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+<span>Akan Dibuka Saat Divalidasi</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Simple State Management for Student Daily Check-in
+  function selectMood(el, moodName, pressureVal) {
+    // Reset all mood pills
+    const allPills = document.querySelectorAll('.mood-pill');
+    allPills.forEach(pill => {
+      pill.classList.remove('selected-mood', 'bg-primary-fixed', 'text-primary', 'shadow-[0_4px_12px_rgba(109,53,207,0.12)]', 'ring-2', 'ring-primary');
+      pill.classList.add('bg-surface-container-low');
+      const label = pill.querySelector('.font-label-md');
+      if (label) {
+        label.classList.remove('text-primary');
+        label.classList.add('text-on-surface-variant');
+      }
+    });
+
+    // Activate clicked pill
+    el.classList.remove('bg-surface-container-low');
+    el.classList.add('selected-mood', 'bg-primary-fixed', 'text-primary', 'shadow-[0_4px_12px_rgba(109,53,207,0.12)]', 'ring-2', 'ring-primary');
+    const activeLabel = el.querySelector('.font-label-md');
+    if (activeLabel) {
+      activeLabel.classList.add('text-primary');
+      activeLabel.classList.remove('text-on-surface-variant');
+    }
+
+    // Sync pressure slider optionally
+    const slider = document.getElementById('pressureSlider');
+    if (slider) {
+      slider.value = pressureVal;
+      updatePressure(pressureVal);
+    }
+  }
+
+  function updatePressure(val) {
+    const label = document.getElementById('pressureLabelText');
+    let category = "Ringan";
+    if (val > 3 && val <= 6) category = "Sedang";
+    if (val > 6 && val <= 8) category = "Tinggi";
+    if (val > 8) category = "Sangat Tinggi";
+
+    if (label) {
+      label.textContent = `Tingkat tekanan belajar: ${category} (${val}/10)`;
+    }
+  }
+
+  function saveMood() {
+    const badge = document.getElementById('moodStatusBadge');
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    if (badge) {
+      badge.innerHTML = `
+        <span class="material-symbols-outlined text-secondary text-[20px]">task_alt</span>
+        <span class="font-label-sm text-label-sm text-on-surface font-semibold">Tersimpan untuk hari ini pukul ${hours}:${minutes} WIB</span>
+      `;
+    }
+  }
+
+  function skipMood() {
+    const badge = document.getElementById('moodStatusBadge');
+    if (badge) {
+      badge.innerHTML = `
+        <span class="material-symbols-outlined text-outline text-[20px]">schedule</span>
+        <span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Dilewati sementara &bull; Kamu bisa isi kapan saja</span>
+      `;
+    }
+  }
+
+  // Task management micro-interactions
+  function toggleTask(checkbox) {
+    const taskCard = checkbox.closest('.task-card');
+    const taskTitle = taskCard.querySelector('.task-title');
+    if (checkbox.checked) {
+      taskTitle.classList.add('line-through', 'opacity-50');
+    } else {
+      taskTitle.classList.remove('line-through', 'opacity-50');
+    }
+    updateCompletedCount();
+  }
+
+  function updateCompletedCount() {
+    const checkboxes = document.querySelectorAll('#taskListContainer input[type="checkbox"]');
+    const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+    const counter = document.getElementById('completedCounter');
+    if (counter) {
+      counter.textContent = checked;
+    }
+  }
+
+  function addTask(e) {
+    e.preventDefault();
+    const input = document.getElementById('newTaskInput');
+    const minutesInput = document.getElementById('newTaskMinutes');
+    const taskText = input.value.trim();
+    const minutes = minutesInput.value.trim() || '15';
+
+    if (!taskText) return;
+
+    const container = document.getElementById('taskListContainer');
+    const newTaskEl = document.createElement('div');
+    newTaskEl.className = "task-card flex items-start gap-space-md p-space-md rounded-2xl bg-surface-container-low hover:bg-surface-container transition-colors group";
+    newTaskEl.innerHTML = `
+      <label class="relative flex items-center cursor-pointer pt-0.5">
+        <input type="checkbox" onchange="toggleTask(this)" class="peer sr-only" />
+        <div class="w-6 h-6 rounded-lg bg-surface-container-lowest flex items-center justify-center text-transparent peer-checked:bg-primary peer-checked:text-on-primary transition-all">
+          <span class="material-symbols-outlined text-[16px] font-bold">check</span>
+        </div>
+      </label>
+      <div class="flex-1 flex flex-col sm:flex-row sm:items-center justify-between gap-space-xs">
+        <div class="flex flex-col">
+          <span class="task-title font-body-lg-bold text-body-lg-bold text-on-surface transition-all">${taskText}</span>
+          <span class="font-label-sm text-label-sm text-on-surface-variant">Target pengerjaan: ${minutes} menit mandiri</span>
+        </div>
+        <div class="flex items-center gap-space-xs shrink-0">
+          <span class="px-space-sm py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm">Mandiri</span>
+        </div>
+      </div>
+    `;
+
+    container.appendChild(newTaskEl);
+    input.value = '';
+    minutesInput.value = '';
+    updateCompletedCount();
+  }
+
+  function toggleReminder(switchEl) {
+    const statusText = document.getElementById('reminderStatusText');
+    if (switchEl.checked) {
+      statusText.textContent = "Status: Aktif - Pengingat berkala setiap 45 menit";
+      statusText.classList.remove('text-on-surface-variant');
+      statusText.classList.add('text-primary', 'font-semibold');
+    } else {
+      statusText.textContent = "Status: Nonaktif - Aktif saat aplikasi dibuka";
+      statusText.classList.remove('text-primary', 'font-semibold');
+      statusText.classList.add('text-on-surface-variant');
+    }
+  }
+</script></main><footer class="w-full bg-surface-container-low py-space-sm px-space-xl flex flex-col sm:flex-row items-center justify-between text-on-surface-variant font-label-sm text-label-sm"><span>Status: Layanan BK SMA Terverifikasi • Sesi Aman ID: #AWAN-2025</span><span>© TENANGIN.ID Remaja</span></footer></div></body></html>

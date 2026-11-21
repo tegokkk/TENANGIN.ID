@@ -1,0 +1,193 @@
+.cardsGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--layout-gap);
+}
+
+.cardsGrid > * {
+  min-width: 0;
+}
+
+@media (min-width: 640px) {
+  .cardsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1000px) {
+  .cardsGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.exerciseCard {
+  text-align: left;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--card-padding);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+  box-shadow: var(--shadow-card);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.exerciseCard:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-hover);
+}
+
+.exerciseCardActive {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-soft);
+  box-shadow: none;
+}
+
+.playerCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+  padding: 26px 20px;
+}
+
+@media (min-width: 768px) {
+  .playerCard {
+    padding: 34px 32px;
+  }
+}
+
+.ringWrap {
+  position: relative;
+  width: min(244px, 100%);
+  aspect-ratio: 1;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ringProgress {
+  transition: stroke-dashoffset 0.35s ease;
+}
+
+.ringCenter {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 12px;
+  width: 78%;
+  min-width: 0;
+}
+
+.timerBig {
+  font-size: clamp(2.4rem, 5vw, 3.1rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+}
+
+.timerSub {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.instructionBox {
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  padding: 18px 22px;
+  max-width: 640px;
+  width: 100%;
+}
+
+.instructionQuote {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.12rem;
+  line-height: 1.45;
+  color: var(--color-primary-hover);
+}
+
+.controlsRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.mediaDrawer {
+  width: 100%;
+  border-top: 1px solid var(--color-border);
+  padding-top: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.searchBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.searchField {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+@media (max-width: 479px) {
+  .controlsRow > button {
+    flex: 1 1 100%;
+  }
+}
+
+.articleBody {
+  margin: 0;
+  color: var(--color-text);
+  white-space: pre-line;
+  line-height: 1.7;
+  max-width: 68ch;
+  font-size: 1rem;
+}
+
+.articleMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  padding-top: 8px;
+  border-top: 1px solid var(--color-border);
+}
+
+.instructionBox {
+  border: 0;
+  background: transparent;
+  border-radius: 0;
+  padding: 12px;
+}
+@media (max-width: 359px) {
+  .ringWrap,
+  .ringWrap > svg {
+    width: 220px;
+    height: 220px;
+  }
+}

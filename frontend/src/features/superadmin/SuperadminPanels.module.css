@@ -1,0 +1,395 @@
+.securityNote {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--color-primary-soft);
+  border: 1px solid var(--color-primary-border);
+  border-radius: var(--radius-panel);
+  padding: 10px 16px;
+  font-size: var(--text-xs);
+  color: var(--color-text);
+  line-height: 1.45;
+}
+
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  gap: var(--space-3);
+}
+
+.kpiLabel {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--color-text-secondary);
+}
+
+.kpiValue {
+  font-size: 1.85rem;
+  font-weight: 800;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: var(--space-4);
+  align-items: end;
+}
+
+.formGrid3 {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: end;
+}
+
+@media (min-width: 640px) {
+  .formGrid3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 960px) {
+  .formGrid3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.twoColActionRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px 16px;
+  align-items: center;
+}
+
+@media (min-width: 720px) {
+  .twoColActionRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+
+.listRowText {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+.twoColGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+}
+
+@media (min-width: 640px) {
+  .twoColGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.itemCard {
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.recordCard {
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.recordCard p {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: 1.55;
+}
+
+.recordCard dl {
+  margin: 4px 0 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+.recordCard dt {
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--color-text-secondary);
+}
+
+.recordCard dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.editorBox {
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-primary-border);
+  border-radius: 18px;
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.fieldsetBox {
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 14px;
+  margin: 0;
+  background-color: var(--color-surface);
+}
+
+.fieldsetBox legend {
+  padding: 0 8px;
+  font-weight: 700;
+  font-size: var(--text-sm);
+  color: var(--color-primary-hover);
+}
+
+.checkRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 4px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.checkRow input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-primary);
+}
+
+.rowBetween {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.listRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+}
+
+.auditRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.auditRow:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.paginationBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 8px;
+}
+
+.statTile {
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg);
+}
+
+.statTileValue {
+  font-weight: 800;
+  font-size: 1.25rem;
+  margin-top: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.quoteBlock {
+  margin: 0;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: var(--text-sm);
+}
+
+.kpiLabel {
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+.kpiValue {
+  margin-top: 8px;
+  font-size: clamp(1.75rem, 2.5vw, 2rem);
+}
+.auditRow {
+  padding-block: 16px;
+}
+.recordCard dl {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr));
+}
+.paginationBar {
+  border-top: 1px solid var(--color-border);
+  padding-top: 16px;
+}
+
+.registrationCards {
+  display: none;
+}
+.registrationActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.registrationActions > :first-child {
+  flex: 2 1 160px;
+}
+.registrationActions > :last-child {
+  flex: 1 1 80px;
+}
+@media (max-width: 767px) {
+  .registrationTable {
+    display: none;
+  }
+  .registrationCards {
+    display: grid;
+    gap: 12px;
+  }
+  .registrationCards dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .registrationCards dd {
+    font-size: var(--text-sm);
+  }
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+.workspace > * {
+  min-width: 0;
+}
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0;
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  padding: 20px;
+  gap: 20px;
+}
+.metrics dt {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+.metrics dd {
+  margin: 8px 0 0;
+  font-size: 1.75rem;
+  line-height: 1.2;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.itemCard,
+.recordCard,
+.listRow {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+  padding: 14px 0;
+}
+.editorBox {
+  border: 0;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+}
+.statTile {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 8px 0;
+}
+.quoteBlock {
+  border: 0;
+  border-left: 2px solid var(--color-border);
+  border-radius: 0;
+  padding: 8px 12px;
+}
+.checkRow {
+  border: 0;
+  border-radius: 0;
+  padding-left: 0;
+}
+.auditRow time {
+  font-size: var(--text-sm);
+}
+@media (min-width: 1000px) {
+  .workspace {
+    grid-template-columns: 206px minmax(0, 1fr);
+    gap: 28px;
+  }
+}
+@media (max-width: 479px) {
+  .metrics {
+    gap: 12px;
+    padding: 16px;
+  }
+  .metrics dt {
+    font-size: var(--text-sm);
+  }
+  .metrics dd {
+    font-size: 1.5rem;
+  }
+}
+
+.accountsTable {
+  min-width: 760px;
+}
+.accountsTable td:nth-child(2),
+.accountsTable td:nth-child(3) {
+  white-space: nowrap;
+}
+.tableActions {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+}
+.tableActions > * {
+  flex-shrink: 0;
+}

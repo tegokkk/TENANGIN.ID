@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+
+<html lang="id"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><title>TENANGIN.ID Siswa</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"secondary-container":"#c6f33a","primary-fixed-dim":"#d2bbff","tertiary-container":"#5b5869","outline-variant":"#ccc3d6","on-error-container":"#93000a","inverse-primary":"#d2bbff","inverse-on-surface":"#f4f1e7","on-tertiary-container":"#d5cfe3","primary-fixed":"#eaddff","on-secondary-fixed-variant":"#3b4d00","on-primary-fixed-variant":"#5816ba","on-secondary-container":"#556d00","primary":"#550db7","secondary":"#506600","error":"#ba1a1a","on-primary":"#ffffff","inverse-surface":"#31312a","surface-container-low":"#f6f4ea","on-tertiary-fixed-variant":"#484554","on-secondary":"#ffffff","on-surface":"#1c1c16","on-secondary-fixed":"#161f00","on-surface-variant":"#4a4454","surface-container":"#f1eee4","on-error":"#ffffff","surface-dim":"#dcdad1","secondary-fixed-dim":"#abd615","on-primary-container":"#ddcaff","surface-container-highest":"#e5e2d9","on-background":"#1c1c16","surface-container-lowest":"#ffffff","secondary-fixed":"#c6f33a","surface-tint":"#713ad3","tertiary-fixed-dim":"#c9c4d7","outline":"#7b7485","on-tertiary-fixed":"#1c1a28","tertiary":"#444150","primary-container":"#6d35cf","surface-container-high":"#ebe8de","on-tertiary":"#ffffff","surface-bright":"#fcf9ef","background":"#fcf9ef","error-container":"#ffdad6","tertiary-fixed":"#e5e0f3","surface-variant":"#e5e2d9","surface":"#fcf9ef","on-primary-fixed":"#25005a"},borderRadius:{DEFAULT:"0.25rem",lg:"0.5rem",xl:"0.75rem",full:"9999px"},spacing:{"space-xl":"2rem","space-2xl":"3rem","margin-mobile":"1rem","space-xs":"0.25rem","space-lg":"1.5rem",gutter:"1.5rem",margin:"2rem","space-md":"1rem","gutter-mobile":"1rem","space-sm":"0.5rem"},fontFamily:{"headline-lg-mobile":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"title-md":["Plus Jakarta Sans"],"body-md":["Plus Jakarta Sans"],"display-lg":["Plus Jakarta Sans"],"body-lg-bold":["Plus Jakarta Sans"],"headline-md":["Plus Jakarta Sans"],"label-sm":["Plus Jakarta Sans"],"label-md":["Plus Jakarta Sans"],"body-lg":["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"],"display-lg-mobile":["Plus Jakarta Sans"]},fontSize:{"headline-lg-mobile":["24px",{lineHeight:"32px",fontWeight:"700"}],"headline-lg":["32px",{lineHeight:"42px",letterSpacing:"-0.01em",fontWeight:"700"}],"title-md":["18px",{lineHeight:"26px",fontWeight:"600"}],"body-md":["14px",{lineHeight:"22px",fontWeight:"400"}],"display-lg":["48px",{lineHeight:"58px",letterSpacing:"-0.02em",fontWeight:"800"}],"body-lg-bold":["16px",{lineHeight:"26px",fontWeight:"600"}],"headline-md":["24px",{lineHeight:"32px",letterSpacing:"-0.005em",fontWeight:"700"}],"label-sm":["12px",{lineHeight:"16px",letterSpacing:"0.02em",fontWeight:"600"}],"label-md":["14px",{lineHeight:"20px",fontWeight:"600"}],"body-lg":["16px",{lineHeight:"26px",fontWeight:"400"}],"headline-sm":["20px",{lineHeight:"28px",fontWeight:"600"}],"display-lg-mobile":["32px",{lineHeight:"40px",letterSpacing:"-0.01em",fontWeight:"800"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-low z-50 flex flex-col pt-space-lg pb-space-xl shadow-[0_1px_8px_rgba(109,53,207,0.04)]"><div class="px-space-lg mb-space-xl flex items-center gap-space-xs"><span class="w-9 h-9 rounded-xl bg-primary-container flex items-center justify-center text-on-primary font-headline-md font-bold leading-none">T</span><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary font-bold leading-tight">TENANGIN</span><span class="font-label-sm text-label-sm text-on-surface-variant font-medium leading-none">Ruang Siswa</span></div></div><div class="px-space-md mb-space-md"><div class="bg-surface-container-lowest rounded-xl p-space-sm flex items-center gap-space-sm shadow-[0_1px_4px_rgba(109,53,207,0.03)]"><div class="w-7 h-7 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold font-label-sm text-label-sm">A</div><div class="flex flex-col overflow-hidden"><span class="font-body-lg-bold text-label-md text-on-surface truncate">Awan-028</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-none">Siswa SMA Aktif</span></div></div></div><nav class="flex-1 px-space-md flex flex-col gap-space-xs" data-active-classes="bg-primary-container text-on-primary font-semibold shadow-[0_4px_12px_rgba(109,53,207,0.18)]"><a class="flex items-center px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all gap-space-sm font-label-md text-label-md" data-path="beranda-siswa" href="#"><span class="material-symbols-outlined text-[20px]">home</span>Beranda</a><a class="flex items-center px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all gap-space-sm font-label-md text-label-md" data-path="tenang" href="#"><span class="material-symbols-outlined text-[20px]">self_improvement</span>Tenang</a><a aria-current="page" class="flex items-center px-space-md py-space-sm rounded-xl transition-all gap-space-sm bg-primary-container text-on-primary font-semibold shadow-[0_4px_12px_rgba(109,53,207,0.18)]" data-path="catat" href="#"><span class="material-symbols-outlined text-[20px]">edit_note</span>Catat</a><a class="flex items-center px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all gap-space-sm font-label-md text-label-md" data-path="refleksi" href="#"><span class="material-symbols-outlined text-[20px]">insights</span>Refleksi</a><a class="flex items-center px-space-md py-space-sm rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all gap-space-sm font-label-md text-label-md" data-path="bantuan" href="#"><span class="material-symbols-outlined text-[20px]">support_agent</span>Bantuan</a></nav><div class="px-space-md mt-auto"><div class="bg-surface-container-lowest p-space-md rounded-2xl flex flex-col gap-space-xs"><div class="flex items-center gap-space-xs text-secondary"><span class="material-symbols-outlined text-[18px]">verified_user</span><span class="font-label-sm text-label-sm font-semibold">Koneksi Aman</span></div><p class="font-label-sm text-label-sm text-on-surface-variant leading-snug">Identitas dan catatan harian teranonimkan secara ketat.</p></div></div></aside><div class="pl-64"><header class="fixed top-0 left-64 right-0 h-16 bg-surface/85 backdrop-blur-xl z-40 px-space-xl flex items-center justify-between shadow-[0_1px_8px_rgba(109,53,207,0.03)]"><nav class="flex items-center gap-space-xs" data-active-classes="bg-primary-fixed text-on-primary-fixed-variant font-body-lg-bold"><a class="px-space-md py-space-xs rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="beranda-siswa" href="#">Beranda</a><a class="px-space-md py-space-xs rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="tenang" href="#">Tenang</a><a aria-current="page" class="px-space-md py-space-xs rounded-full transition-colors bg-primary-fixed text-on-primary-fixed-variant font-body-lg-bold" data-path="catat" href="#">Catat</a><a class="px-space-md py-space-xs rounded-full font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="refleksi" href="#">Refleksi</a></nav><div class="flex items-center gap-space-md"><div class="hidden lg:flex items-center gap-space-xs bg-surface-container-low px-space-sm py-space-xs rounded-full font-label-sm text-label-sm text-on-surface-variant"><span class="w-2 h-2 rounded-full bg-secondary-fixed-dim"></span><span>BK Online: 07.30 - 15.30 WIB</span></div><a class="px-space-md py-space-xs rounded-xl bg-secondary-fixed text-on-secondary-fixed font-body-lg-bold text-label-md hover:bg-secondary-fixed-dim transition-colors shadow-[0_4px_14px_-2px_rgba(80,102,0,0.22)] flex items-center gap-space-xs" data-path="bantuan" href="#"><span class="material-symbols-outlined text-[16px]">chat_bubble</span><span>Butuh bicara?</span></a><div class="flex items-center gap-space-xs bg-surface-container-lowest py-space-xs px-space-sm rounded-full"><span class="font-label-sm text-label-sm font-semibold text-on-surface">Awan-028</span><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="relative pt-16 bg-surface min-h-[calc(100vh-4rem)] w-full px-space-xl pb-space-2xl"><div class="flex flex-col w-full">
+<!-- Header Halaman -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md mb-space-xl">
+<div class="max-w-2xl">
+<div class="inline-flex items-center gap-space-xs bg-primary-fixed text-on-primary-fixed-variant px-space-sm py-1 rounded-full font-label-sm text-label-sm mb-space-xs">
+<span class="material-symbols-outlined text-[16px]">edit_note</span>
+<span>Jurnal Reflektif CBT Siswa</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Catat Pikiran &amp; Perasaan</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-1">Uraikan apa yang sedang berkecamuk dalam pikiranmu menjadi potongan-potongan yang lebih jernih dan terkendali.</p>
+</div>
+<div class="flex items-center gap-space-sm self-start md:self-auto bg-surface-container-low px-space-md py-space-xs rounded-2xl shadow-sm">
+<div class="w-3 h-3 rounded-full bg-secondary-fixed-dim animate-pulse"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant" id="autosave-indicator">Tersimpan otomatis • Sesi Aman</span>
+</div>
+</div>
+<!-- Banner Transparansi Privasi PRD v2.1 -->
+<div class="mb-space-xl bg-primary-fixed/40 rounded-2xl p-space-md shadow-sm relative overflow-hidden">
+<div class="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-primary-fixed/30 pointer-events-none blur-xl"></div>
+<div class="flex items-start gap-space-md relative z-10">
+<div class="w-10 h-10 rounded-xl bg-primary-container text-on-primary flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[22px]">lock</span>
+</div>
+<div class="flex flex-col justify-center">
+<div class="flex items-center gap-space-xs mb-0.5">
+<span class="font-body-lg-bold text-label-md text-primary">Jaminan Kerahasiaan Penuh</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-secondary-container text-on-secondary-container">PRD v2.1</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+          Catatan ini privat dan dilindungi. Catatan dapat diakses olehmu dan Superadmin sistem. Guru BK hanya menerima metadata aktivitas (status selesai mencatat) tanpa melihat isi catatanmu.
+        </p>
+</div>
+</div>
+</div>
+<!-- Form Jurnal Utama -->
+<section class="bg-surface-container-lowest rounded-3xl p-space-lg md:p-space-xl shadow-[0_4px_24px_-4px_rgba(109,53,207,0.06)] mb-space-2xl relative">
+<div class="flex items-center justify-between pb-space-md mb-space-lg border-b border-surface-container">
+<div class="flex items-center gap-space-sm">
+<span class="w-2.5 h-6 bg-primary-container rounded-full"></span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface" id="form-title">Lembar Rekurensi &amp; Uraian Stres</h2>
+</div>
+<span class="font-label-sm text-label-sm text-outline" id="entry-timestamp">Dibuat Hari Ini, 20 Nov 2026</span>
+</div>
+<form class="flex flex-col gap-space-lg" id="journal-form" onsubmit="event.preventDefault(); saveEntry();">
+<input id="entry-id" type="hidden" value=""/>
+<!-- Field 1: Situasi -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-center">
+<label class="font-body-lg-bold text-label-md text-on-surface flex items-center gap-space-xs" for="situation">
+<span class="w-6 h-6 rounded-full bg-surface-container flex items-center justify-center font-label-sm text-label-sm text-primary">1</span>
+            Apa yang sedang terjadi? (Situasi)
+          </label>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Deskripsikan peristiwa pemicu</span>
+</div>
+<textarea class="w-full p-space-md rounded-2xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container focus:outline-none transition-all resize-y" id="situation" placeholder="Contoh: Ada tugas presentasi kelompok besok dan pembagian materi belum selesai..." rows="3">Tugas proyek Biologi dikumpulkan lusa, rasanya waktu belajar sangat mepet.</textarea>
+</div>
+<!-- Field 2: Pikiran Otomatis -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-center">
+<label class="font-body-lg-bold text-label-md text-on-surface flex items-center gap-space-xs" for="thoughts">
+<span class="w-6 h-6 rounded-full bg-surface-container flex items-center justify-center font-label-sm text-label-sm text-primary">2</span>
+            Apa yang kamu pikirkan? (Pikiran otomatis)
+          </label>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Kekhawatiran terdalam</span>
+</div>
+<textarea class="w-full p-space-md rounded-2xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container focus:outline-none transition-all resize-y" id="thoughts" placeholder="Apa kekhawatiran terbesar yang muncul di kepalamu?" rows="3">Takut nilaiku anjlok dan bikin malu kelompok kalau penjelasanku kurang bagus.</textarea>
+</div>
+<!-- Field 3: Emosi & Sensasi -->
+<div class="flex flex-col gap-3">
+<div class="flex justify-between items-center">
+<label class="font-body-lg-bold text-label-md text-on-surface flex items-center gap-space-xs">
+<span class="w-6 h-6 rounded-full bg-surface-container flex items-center justify-center font-label-sm text-label-sm text-primary">3</span>
+            Apa yang kamu rasakan? (Perasaan &amp; sensasi fisik)
+          </label>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Pilih satu atau lebih emosi dominan</span>
+</div>
+<div class="flex flex-wrap gap-space-xs" id="emotion-chips-container">
+<button class="emotion-chip px-space-md py-2 rounded-full font-label-md text-label-md transition-all flex items-center gap-1.5 bg-primary-fixed text-primary font-semibold shadow-sm" data-emotion="Gelisah" onclick="toggleEmotion(this)" type="button">
+<span class="material-symbols-outlined text-[16px]">sentiment_dissatisfied</span>
+<span>Gelisah</span>
+</button>
+<button class="emotion-chip px-space-md py-2 rounded-full font-label-md text-label-md transition-all flex items-center gap-1.5 bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high" data-emotion="Takut" onclick="toggleEmotion(this)" type="button">
+<span class="material-symbols-outlined text-[16px]">crisis_alert</span>
+<span>Takut</span>
+</button>
+<button class="emotion-chip px-space-md py-2 rounded-full font-label-md text-label-md transition-all flex items-center gap-1.5 bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high" data-emotion="Kelelahan" onclick="toggleEmotion(this)" type="button">
+<span class="material-symbols-outlined text-[16px]">battery_alert</span>
+<span>Kelelahan</span>
+</button>
+<button class="emotion-chip px-space-md py-2 rounded-full font-label-md text-label-md transition-all flex items-center gap-1.5 bg-primary-fixed text-primary font-semibold shadow-sm" data-emotion="Beban berat" onclick="toggleEmotion(this)" type="button">
+<span class="material-symbols-outlined text-[16px]">fitness_center</span>
+<span>Beban berat</span>
+</button>
+<button class="emotion-chip px-space-md py-2 rounded-full font-label-md text-label-md transition-all flex items-center gap-1.5 bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high" data-emotion="Bingung" onclick="toggleEmotion(this)" type="button">
+<span class="material-symbols-outlined text-[16px]">help</span>
+<span>Bingung</span>
+</button>
+</div>
+</div>
+<!-- Field 4: Pikiran Alternatif & Accordion -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-center">
+<label class="font-body-lg-bold text-label-md text-on-surface flex items-center gap-space-xs" for="alternative">
+<span class="w-6 h-6 rounded-full bg-surface-container flex items-center justify-center font-label-sm text-label-sm text-primary">4</span>
+            Cara lain melihat situasi ini? (Pikiran alternatif • Opsional)
+          </label>
+<span class="font-label-sm text-label-sm text-secondary font-medium">Langkah Menenangkan</span>
+</div>
+<!-- Accordion Panduan -->
+<div class="bg-surface-container-low/70 rounded-2xl overflow-hidden transition-all duration-300">
+<button class="w-full px-space-md py-space-sm flex items-center justify-between text-left hover:bg-surface-container transition-colors" onclick="toggleGuideAccordion()" type="button">
+<span class="flex items-center gap-space-xs font-label-sm text-label-sm text-primary">
+<span class="material-symbols-outlined text-[18px]">lightbulb</span>
+              Buka contoh cara melihat dari sudut pandang realistis
+            </span>
+<span class="material-symbols-outlined text-[18px] text-primary transition-transform duration-200" id="accordion-icon">expand_more</span>
+</button>
+<div class="hidden px-space-md pb-space-md pt-space-xs text-on-surface-variant font-body-md text-body-md flex flex-col gap-2 bg-surface-container/30" id="accordion-content">
+<div class="flex items-start gap-2 bg-surface-container-lowest p- space-sm rounded-xl">
+<span class="material-symbols-outlined text-[16px] text-secondary mt-0.5">check_circle</span>
+<p><strong class="text-on-surface">Uji fakta:</strong> “Apakah pernah ada tugas kelompok yang gagal total hanya karena satu bagian kecil?”</p>
+</div>
+<div class="flex items-start gap-2 bg-surface-container-lowest p- space-sm rounded-xl">
+<span class="material-symbols-outlined text-[16px] text-secondary mt-0.5">check_circle</span>
+<p><strong class="text-on-surface">Fokus kendali:</strong> “Apa yang bisa kukerjakan dalam 30 menit ke depan, daripada mengkhawatirkan hari lusa?”</p>
+</div>
+</div>
+</div>
+<textarea class="w-full p-space-md rounded-2xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary-container focus:outline-none transition-all resize-y" id="alternative" placeholder="Coba tuliskan sudut pandang yang lebih objektif dan ramah terhadap diri sendiri..." rows="3">Aku sudah mulai mencicil 3 slide. Masih ada waktu besok siang untuk latihan bersama teman kelompok.</textarea>
+</div>
+<!-- Action Buttons & Status -->
+<div class="pt-space-md flex flex-col sm:flex-row items-center justify-between gap-space-md border-t border-surface-container">
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm order-2 sm:order-1">
+<span class="material-symbols-outlined text-[16px] text-secondary">cloud_done</span>
+<span id="draft-status-text">Draft tersimpan di peramban lokal • Aman</span>
+</div>
+<div class="flex items-center gap-space-sm w-full sm:w-auto order-1 sm:order-2 justify-end">
+<button class="px-space-md py-3 rounded-2xl font-label-md text-label-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" onclick="resetForm()" type="button">
+            Kosongkan Formulir
+          </button>
+<button class="px-space-xl py-3 rounded-2xl bg-primary-container text-on-primary font-body-lg-bold text-label-md hover:bg-primary transition-all shadow-[0_4px_16px_rgba(109,53,207,0.24)] flex items-center justify-center gap-space-xs" id="submit-btn" type="submit">
+<span class="material-symbols-outlined text-[20px]">save</span>
+<span>Simpan Jurnal</span>
+</button>
+</div>
+</div>
+</form>
+</section>
+<!-- Seksi Riwayat: Catatan Sebelumnya -->
+<section class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[24px]">history_edu</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Catatan Sebelumnya</h3>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant" id="total-entries-badge">3 Catatan Tersimpan</span>
+</div>
+<!-- Container Daftar Entri -->
+<div class="grid grid-cols-1 gap-space-md" id="journal-history-list">
+<!-- Entri 1 -->
+<article class="journal-card bg-surface-container-lowest p-space-lg rounded-3xl shadow-[0_2px_12px_rgba(109,53,207,0.03)] hover:shadow-[0_8px_24px_rgba(109,53,207,0.07)] transition-all flex flex-col md:flex-row md:items-center justify-between gap-space-md" data-id="entri-1">
+<div class="flex flex-col gap-2 max-w-3xl">
+<div class="flex flex-wrap items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">calendar_today</span>
+              Kemarin, 19 Nov 2026
+            </span>
+<span class="text-outline">•</span>
+<span class="font-label-sm text-label-sm text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+              20:45 WIB
+            </span>
+<div class="flex items-center gap-1 ml-2">
+<span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-primary-fixed text-primary">Gelisah</span>
+<span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-surface-container text-on-surface-variant">Khawatir</span>
+</div>
+</div>
+<h4 class="font-title-md text-title-md text-on-surface journal-entry-title">Tugas Biologi &amp; Presentasi Kelompok</h4>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 journal-entry-preview">
+            Tugas proyek Biologi dikumpulkan lusa, rasanya waktu belajar sangat mepet. Takut nilaiku anjlok dan bikin malu kelompok kalau penjelasanku kurang bagus.
+          </p>
+<div class="hidden journal-full-data" data-alternative="Aku sudah mulai mencicil 3 slide. Masih ada waktu besok siang untuk latihan bersama teman kelompok." data-emotions="Gelisah,Khawatir" data-situation="Tugas proyek Biologi dikumpulkan lusa, rasanya waktu belajar sangat mepet." data-thoughts="Takut nilaiku anjlok dan bikin malu kelompok kalau penjelasanku kurang bagus.">
+</div>
+</div>
+<div class="flex items-center gap-space-xs shrink-0 self-end md:self-center">
+<button class="px-space-md py-2 rounded-xl bg-surface-container-low hover:bg-surface-container text-primary font-body-lg-bold text-label-md transition-colors flex items-center gap-1" onclick="editEntry('entri-1')" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+<span>Buka &amp; Edit</span>
+</button>
+<button class="p-2 rounded-xl hover:bg-error-container text-error hover:text-on-error-container transition-colors" onclick="confirmDelete('entri-1', 'Tugas Biologi &amp; Presentasi Kelompok')" title="Hapus Catatan" type="button">
+<span class="material-symbols-outlined text-[20px]">delete_outline</span>
+</button>
+</div>
+</article>
+<!-- Entri 2 -->
+<article class="journal-card bg-surface-container-lowest p-space-lg rounded-3xl shadow-[0_2px_12px_rgba(109,53,207,0.03)] hover:shadow-[0_8px_24px_rgba(109,53,207,0.07)] transition-all flex flex-col md:flex-row md:items-center justify-between gap-space-md" data-id="entri-2">
+<div class="flex flex-col gap-2 max-w-3xl">
+<div class="flex flex-wrap items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">calendar_today</span>
+              15 Nov 2026
+            </span>
+<span class="text-outline">•</span>
+<span class="font-label-sm text-label-sm text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+              14:10 WIB
+            </span>
+<div class="flex items-center gap-1 ml-2">
+<span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-surface-container text-on-surface-variant">Kecewa</span>
+<span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-secondary-container text-on-secondary-container">Lega</span>
+</div>
+</div>
+<h4 class="font-title-md text-title-md text-on-surface journal-entry-title">Nilai Ulangan Harian Matematika</h4>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 journal-entry-preview">
+            Menerima hasil ujian Matematika Bab Trigonometri dengan nilai di bawah ekspektasi pribadi. Sempat merasa tidak mampu bersaing, namun menyadari bahwa ini baru tahap latihan evaluasi.
+          </p>
+<div class="hidden journal-full-data" data-alternative="Ini ulangan harian pertama, ada kesempatan remedial dan aku tahu bagian mana rumus yang salah dihitung." data-emotions="Kecewa,Lega" data-situation="Menerima hasil ujian Matematika Bab Trigonometri." data-thoughts="Merasa tidak mampu bersaing dan kecewa berat.">
+</div>
+</div>
+<div class="flex items-center gap-space-xs shrink-0 self-end md:self-center">
+<button class="px-space-md py-2 rounded-xl bg-surface-container-low hover:bg-surface-container text-primary font-body-lg-bold text-label-md transition-colors flex items-center gap-1" onclick="editEntry('entri-2')" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+<span>Buka &amp; Edit</span>
+</button>
+<button class="p-2 rounded-xl hover:bg-error-container text-error hover:text-on-error-container transition-colors" onclick="confirmDelete('entri-2', 'Nilai Ulangan Harian Matematika')" title="Hapus Catatan" type="button">
+<span class="material-symbols-outlined text-[20px]">delete_outline</span>
+</button>
+</div>
+</article>
+<!-- Entri 3 -->
+<article class="journal-card bg-surface-container-lowest p-space-lg rounded-3xl shadow-[0_2px_12px_rgba(109,53,207,0.03)] hover:shadow-[0_8px_24px_rgba(109,53,207,0.07)] transition-all flex flex-col md:flex-row md:items-center justify-between gap-space-md" data-id="entri-3">
+<div class="flex flex-col gap-2 max-w-3xl">
+<div class="flex flex-wrap items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">calendar_today</span>
+              10 Nov 2026
+            </span>
+<span class="text-outline">•</span>
+<span class="font-label-sm text-label-sm text-outline flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+              09:30 WIB
+            </span>
+<div class="flex items-center gap-1 ml-2">
+<span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-secondary-container text-on-secondary-container">Tenang</span>
+</div>
+</div>
+<h4 class="font-title-md text-title-md text-on-surface journal-entry-title">Jadwal Belajar Akhir Pekan</h4>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 journal-entry-preview">
+            Menata kembali ritme istirahat dan jam belajar mandiri tanpa terdistraksi media sosial seharian. Merasa lebih terkendali dan siap menghadapi pekan depan.
+          </p>
+<div class="hidden journal-full-data" data-alternative="Cukup jadwalkan 2 jam fokus di pagi hari, sisanya bebas istirahat tanpa rasa bersalah." data-emotions="Tenang" data-situation="Menyusun agenda akhir pekan di meja belajar." data-thoughts="Sering terbuang waktu jika tidak ada jadwal terstruktur.">
+</div>
+</div>
+<div class="flex items-center gap-space-xs shrink-0 self-end md:self-center">
+<button class="px-space-md py-2 rounded-xl bg-surface-container-low hover:bg-surface-container text-primary font-body-lg-bold text-label-md transition-colors flex items-center gap-1" onclick="editEntry('entri-3')" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+<span>Buka &amp; Edit</span>
+</button>
+<button class="p-2 rounded-xl hover:bg-error-container text-error hover:text-on-error-container transition-colors" onclick="confirmDelete('entri-3', 'Jadwal Belajar Akhir Pekan')" title="Hapus Catatan" type="button">
+<span class="material-symbols-outlined text-[20px]">delete_outline</span>
+</button>
+</div>
+</article>
+</div>
+</section>
+<!-- Modal Konfirmasi Hapus -->
+<div class="fixed inset-0 bg-inverse-surface/40 backdrop-blur-sm z-50 hidden items-center justify-center p-space-md" id="delete-modal">
+<div class="bg-surface-container-lowest max-w-md w-full rounded-3xl p-space-xl shadow-2xl flex flex-col gap-space-md animate-in fade-in zoom-in-95 duration-200">
+<div class="w-12 h-12 rounded-2xl bg-error-container text-on-error-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">delete_forever</span>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Hapus Catatan Ini?</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+          Catatan “<span class="font-semibold text-on-surface" id="delete-target-title"></span>” akan dihapus secara permanen dari jurnal pribadimu. Tindakan ini tidak dapat dibatalkan.
+        </p>
+</div>
+<div class="flex items-center justify-end gap-space-sm pt-space-xs">
+<button class="px-space-md py-2.5 rounded-xl font-label-md text-label-md text-on-surface-variant hover:bg-surface-container transition-colors" onclick="closeDeleteModal()" type="button">
+          Batal
+        </button>
+<button class="px-space-lg py-2.5 rounded-xl bg-error text-on-error font-body-lg-bold text-label-md hover:bg-error/90 transition-colors shadow-sm" id="confirm-delete-btn" type="button">
+          Ya, Hapus Permanen
+        </button>
+</div>
+</div>
+</div>
+<!-- Toast Notifikasi Interaktif -->
+<div class="fixed bottom-6 right-6 z-50 bg-inverse-surface text-inverse-on-surface px-space-md py-space-sm rounded-2xl shadow-xl flex items-center gap-space-sm transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none" id="toast-notification">
+<span class="material-symbols-outlined text-[20px] text-secondary-container" id="toast-icon">check_circle</span>
+<span class="font-body-md text-body-md" id="toast-message">Catatan berhasil disimpan</span>
+</div>
+<!-- Client-side Logic -->
+<script>
+    let activeDeleteId = null;
+
+    function toggleGuideAccordion() {
+      const content = document.getElementById('accordion-content');
+      const icon = document.getElementById('accordion-icon');
+      const isHidden = content.classList.contains('hidden');
+      if (isHidden) {
+        content.classList.remove('hidden');
+        icon.classList.add('rotate-180');
+      } else {
+        content.classList.add('hidden');
+        icon.classList.remove('rotate-180');
+      }
+    }
+
+    function toggleEmotion(button) {
+      const isSelected = button.classList.contains('bg-primary-fixed');
+      if (isSelected) {
+        button.classList.remove('bg-primary-fixed', 'text-primary', 'font-semibold', 'shadow-sm');
+        button.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+      } else {
+        button.classList.add('bg-primary-fixed', 'text-primary', 'font-semibold', 'shadow-sm');
+        button.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
+      }
+      updateAutosaveText();
+    }
+
+    function updateAutosaveText() {
+      const indicator = document.getElementById('autosave-indicator');
+      const draftStatus = document.getElementById('draft-status-text');
+      indicator.innerText = 'Menyimpan perubahan...';
+      draftStatus.innerText = 'Menyinkronkan draft lokal...';
+      setTimeout(() => {
+        indicator.innerText = 'Tersimpan otomatis • Draft aman';
+        draftStatus.innerText = 'Draft tersimpan di peramban lokal • Aman';
+      }, 700);
+    }
+
+    // Input listeners for auto-save feedback
+    ['situation', 'thoughts', 'alternative'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', () => updateAutosaveText());
+      }
+    });
+
+    function resetForm() {
+      document.getElementById('entry-id').value = '';
+      document.getElementById('situation').value = '';
+      document.getElementById('thoughts').value = '';
+      document.getElementById('alternative').value = '';
+      document.getElementById('form-title').innerText = 'Lembar Rekurensi & Uraian Stres Baru';
+      document.getElementById('submit-btn').innerHTML = '<span class="material-symbols-outlined text-[20px]">save</span><span>Simpan Jurnal</span>';
+
+      // Reset emotion chips
+      const chips = document.querySelectorAll('.emotion-chip');
+      chips.forEach(chip => {
+        chip.classList.remove('bg-primary-fixed', 'text-primary', 'font-semibold', 'shadow-sm');
+        chip.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+      });
+
+      showToast('Formulir telah dikosongkan untuk entri baru.');
+    }
+
+    function editEntry(id) {
+      const article = document.querySelector(`article[data-id="${id}"]`);
+      if (!article) return;
+
+      const fullData = article.querySelector('.journal-full-data');
+      const title = article.querySelector('.journal-entry-title').innerText;
+      const situation = fullData.getAttribute('data-situation') || '';
+      const thoughts = fullData.getAttribute('data-thoughts') || '';
+      const alternative = fullData.getAttribute('data-alternative') || '';
+      const emotions = (fullData.getAttribute('data-emotions') || '').split(',');
+
+      document.getElementById('entry-id').value = id;
+      document.getElementById('situation').value = situation;
+      document.getElementById('thoughts').value = thoughts;
+      document.getElementById('alternative').value = alternative;
+      document.getElementById('form-title').innerText = 'Mengedit: ' + title;
+      document.getElementById('submit-btn').innerHTML = '<span class="material-symbols-outlined text-[20px]">update</span><span>Perbarui Catatan</span>';
+
+      // Update chips
+      const chips = document.querySelectorAll('.emotion-chip');
+      chips.forEach(chip => {
+        const emotionName = chip.getAttribute('data-emotion');
+        if (emotions.includes(emotionName)) {
+          chip.classList.add('bg-primary-fixed', 'text-primary', 'font-semibold', 'shadow-sm');
+          chip.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
+        } else {
+          chip.classList.remove('bg-primary-fixed', 'text-primary', 'font-semibold', 'shadow-sm');
+          chip.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+        }
+      });
+
+      window.scrollTo({ top: 120, behavior: 'smooth' });
+      showToast('Data catatan dimuat ke formulir.');
+    }
+
+    function saveEntry() {
+      const situation = document.getElementById('situation').value.trim();
+      const thoughts = document.getElementById('thoughts').value.trim();
+      const alternative = document.getElementById('alternative').value.trim();
+      const entryId = document.getElementById('entry-id').value;
+
+      if (!situation && !thoughts) {
+        showToast('Mohon isi situasi atau pikiranmu terlebih dahulu.', true);
+        return;
+      }
+
+      if (entryId) {
+        // Mode update existing
+        const article = document.querySelector(`article[data-id="${entryId}"]`);
+        if (article) {
+          const fullData = article.querySelector('.journal-full-data');
+          fullData.setAttribute('data-situation', situation);
+          fullData.setAttribute('data-thoughts', thoughts);
+          fullData.setAttribute('data-alternative', alternative);
+          article.querySelector('.journal-entry-preview').innerText = situation + ' ' + thoughts;
+          showToast('Perubahan catatan berhasil diperbarui.');
+        }
+      } else {
+        // Mode add new entry
+        const historyList = document.getElementById('journal-history-list');
+        const newId = 'entri-' + Date.now();
+        const newTitle = situation.slice(0, 35) + (situation.length > 35 ? '...' : '');
+
+        const newArticle = document.createElement('article');
+        newArticle.setAttribute('data-id', newId);
+        newArticle.className = 'journal-card bg-surface-container-lowest p-space-lg rounded-3xl shadow-[0_2px_12px_rgba(109,53,207,0.03)] hover:shadow-[0_8px_24px_rgba(109,53,207,0.07)] transition-all flex flex-col md:flex-row md:items-center justify-between gap-space-md animate-in fade-in duration-300';
+        newArticle.innerHTML = `
+          <div class="flex flex-col gap-2 max-w-3xl">
+            <div class="flex flex-wrap items-center gap-space-xs">
+              <span class="font-label-sm text-label-sm text-outline flex items-center gap-1">
+                <span class="material-symbols-outlined text-[14px]">calendar_today</span>
+                Baru saja
+              </span>
+              <span class="text-outline">&bull;</span>
+              <span class="font-label-sm text-label-sm text-outline flex items-center gap-1">
+                <span class="material-symbols-outlined text-[14px]">schedule</span>
+                Sekarang
+              </span>
+              <div class="flex items-center gap-1 ml-2">
+                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-primary-fixed text-primary">Tercatat</span>
+              </div>
+            </div>
+            
+            <h4 class="font-title-md text-title-md text-on-surface journal-entry-title">${newTitle || 'Catatan Refleksi Baru'}</h4>
+            <p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 journal-entry-preview">
+              ${situation} ${thoughts}
+            </p>
+            <div class="hidden journal-full-data" 
+                 data-situation="${situation.replace(/"/g, '&quot;')}" 
+                 data-thoughts="${thoughts.replace(/"/g, '&quot;')}" 
+                 data-emotions="Gelisah" 
+                 data-alternative="${alternative.replace(/"/g, '&quot;')}">
+            </div>
+          </div>
+
+          <div class="flex items-center gap-space-xs shrink-0 self-end md:self-center">
+            <button type="button" onclick="editEntry('${newId}')" class="px-space-md py-2 rounded-xl bg-surface-container-low hover:bg-surface-container text-primary font-body-lg-bold text-label-md transition-colors flex items-center gap-1">
+              <span class="material-symbols-outlined text-[18px]">edit</span>
+              <span>Buka &amp; Edit</span>
+            </button>
+            <button type="button" onclick="confirmDelete('${newId}', '${newTitle.replace(/'/g, "\\'")}')" class="p-2 rounded-xl hover:bg-error-container text-error hover:text-on-error-container transition-colors" title="Hapus Catatan">
+              <span class="material-symbols-outlined text-[20px]">delete_outline</span>
+            </button>
+          </div>
+        `;
+        historyList.prepend(newArticle);
+        updateTotalCount();
+        showToast('Catatan jurnal berhasil ditambahkan.');
+      }
+    }
+
+    function confirmDelete(id, title) {
+      activeDeleteId = id;
+      document.getElementById('delete-target-title').innerText = title;
+      const modal = document.getElementById('delete-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+
+      document.getElementById('confirm-delete-btn').onclick = function() {
+        const targetArticle = document.querySelector(`article[data-id="${activeDeleteId}"]`);
+        if (targetArticle) {
+          targetArticle.remove();
+          updateTotalCount();
+          showToast('Catatan telah dihapus.');
+        }
+        closeDeleteModal();
+      };
+    }
+
+    function closeDeleteModal() {
+      const modal = document.getElementById('delete-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      activeDeleteId = null;
+    }
+
+    function updateTotalCount() {
+      const count = document.querySelectorAll('#journal-history-list article').length;
+      document.getElementById('total-entries-badge').innerText = `${count} Catatan Tersimpan`;
+    }
+
+    function showToast(message, isError = false) {
+      const toast = document.getElementById('toast-notification');
+      const toastMsg = document.getElementById('toast-message');
+      const toastIcon = document.getElementById('toast-icon');
+
+      toastMsg.innerText = message;
+      if (isError) {
+        toastIcon.innerText = 'warning';
+        toastIcon.className = 'material-symbols-outlined text-[20px] text-error-container';
+      } else {
+        toastIcon.innerText = 'check_circle';
+        toastIcon.className = 'material-symbols-outlined text-[20px] text-secondary-container';
+      }
+
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3000);
+    }
+  </script>
+</div></main><footer class="w-full bg-surface-container-low py-space-sm px-space-xl flex flex-col sm:flex-row items-center justify-between text-on-surface-variant font-label-sm text-label-sm"><span>Status: Layanan BK SMA Terverifikasi • Sesi Aman ID: #AWAN-2025</span><span>© TENANGIN.ID Remaja</span></footer></div></body></html>

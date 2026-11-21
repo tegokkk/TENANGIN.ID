@@ -1,0 +1,131 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 110;
+  background-color: rgba(37, 37, 31, 0.4);
+  display: flex;
+  justify-content: flex-end;
+  overflow: hidden;
+  animation: fadeBackdrop var(--transition-fast);
+}
+
+.drawer {
+  width: 100%;
+  max-width: 448px;
+  height: 100%;
+  background-color: var(--color-surface);
+  border-left: 1px solid var(--color-border);
+  padding: var(--card-padding);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  box-shadow: var(--shadow-modal);
+  animation: fadeBackdrop var(--transition-base);
+  overscroll-behavior: contain;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: calc(-1 * var(--card-padding));
+  z-index: 1;
+  background: var(--color-surface);
+  padding-top: var(--card-padding);
+  margin-top: calc(-1 * var(--card-padding));
+}
+
+.closeBtn {
+  min-width: var(--touch-min);
+  min-height: var(--touch-min);
+  border-radius: 12px;
+  border: 1px solid var(--color-border-strong);
+  background: var(--color-surface);
+  color: var(--color-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.closeBtn:hover {
+  background-color: var(--color-surface-muted);
+  border-color: var(--color-primary);
+}
+
+.section {
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.metaRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--text-sm);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.metaRow:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.dangerZone {
+  border-color: var(--color-error-border);
+  background-color: #fff9fa;
+}
+
+@keyframes fadeBackdrop {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.drawer {
+  padding-bottom: calc(var(--card-padding) + env(safe-area-inset-bottom, 0px));
+}
+.metaRow {
+  flex-wrap: wrap;
+}
+
+.section {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  border-radius: 0;
+  padding: 0 0 20px;
+}
+.dangerZone {
+  background: transparent;
+}
+.metaRow {
+  border: 0;
+  padding-bottom: 4px;
+}

@@ -1,0 +1,100 @@
+:root {
+  /* Identitas klien: teal, hijau daun, sage, dan krem dari logo TENANGIN.ID */
+  --color-brand-green: #438b6b;
+  --color-primary: #195654;
+  --color-primary-hover: #124643;
+  --color-primary-active: #0d3835;
+  --color-primary-soft: #edf4ee;
+  --color-primary-border: #c7dccb;
+  --color-on-primary: #ffffff;
+
+  --color-accent: #a1bf7a;
+  --color-accent-hover: #91b26a;
+  --color-accent-active: #81a35b;
+  --color-accent-soft: #f0f4e8;
+  --color-accent-border: #cbdab7;
+  --color-on-accent: #173326;
+  --color-sage: #d5dfbf;
+  --color-mint: #90b99a;
+
+  --color-bg: #fcfbf8;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f3f5ee;
+  --color-surface-warm: #f8f6ee;
+
+  --color-text: #243c33;
+  --color-text-secondary: #526559;
+  --color-text-muted: #65766a;
+  --color-border: #e0e6d9;
+  --color-border-strong: #7b8d7d;
+
+  --color-success: #17724a;
+  --color-success-bg: #eaf7ef;
+  --color-success-border: #bce3cb;
+  --color-warning: #805400;
+  --color-warning-bg: #fff6e0;
+  --color-warning-border: #eedaa2;
+  --color-error: #a52c3d;
+  --color-error-bg: #fff0f2;
+  --color-error-border: #f1bac2;
+  --color-on-error: #ffffff;
+
+  /* Tipografi */
+  --font-sans:
+    'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+  --text-xs: 0.8125rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 2rem;
+  --text-page: clamp(1.6rem, 2.5vw, 2.1rem);
+  --text-section: clamp(1.25rem, 1.8vw, 1.55rem);
+  --text-hero: clamp(2rem, 4vw, 3.2rem);
+
+  /* Bentuk & Kontrol */
+  --radius-sm: 8px;
+  --radius-control: 12px;
+  --radius-panel: 14px;
+  --radius-card: 18px;
+  --radius-hero: 24px;
+  --radius-pill: 9999px;
+
+  --control-height: 46px;
+  --control-height-sm: 40px;
+  --control-height-lg: 50px;
+  --text-control: 0.875rem;
+  --text-card: clamp(1.05rem, 1.4vw, 1.15rem);
+  --card-padding: clamp(18px, 2vw, 24px);
+  --layout-gap: clamp(16px, 1.8vw, 22px);
+  --page-gap: clamp(20px, 2.5vw, 28px);
+  --reading-max: 880px;
+  --touch-min: 44px;
+
+  /* Jarak & Layout */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+
+  --container-max: 1120px;
+  --page-padding-mobile: 16px;
+  --page-padding-desktop: 24px;
+
+  /* Elevasi & Gerak Lembut */
+  --shadow-soft: 0 1px 3px rgba(25, 65, 46, 0.04);
+  --shadow-card: 0 1px 4px rgba(25, 65, 46, 0.04), 0 4px 12px rgba(25, 65, 46, 0.02);
+  --shadow-hover: 0 4px 16px rgba(25, 65, 46, 0.08);
+  --shadow-button: 0 2px 6px rgba(25, 86, 84, 0.16);
+  --shadow-modal: 0 16px 40px -8px rgba(22, 49, 37, 0.18);
+  --focus-ring: 0 0 0 3px rgba(25, 86, 84, 0.24);
+
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+}
