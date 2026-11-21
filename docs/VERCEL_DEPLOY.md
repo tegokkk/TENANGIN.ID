@@ -148,6 +148,19 @@ Setelah deploy manual:
 
 API 503 saat cold start menunjukkan konfigurasi, schema, data fixture, atau koneksi database perlu diperiksa pada Runtime Logs. Tidak ada migrasi maupun seed otomatis pada saat Function dipanggil.
 
+Log startup berformat JSON dengan `event=vercel_api_initialization_failed`, `stage`, dan `code`. Log tidak menampilkan nilai environment, connection string, SQL, atau pesan error mentah. Jika variabel tidak valid, `fields` mencantumkan nama variabel yang perlu diperiksa.
+
+| Diagnostik | Pemeriksaan |
+| --- | --- |
+| `stage=configuration` | Periksa nama dalam `fields`, nilai template, tanda kutip tambahan, dan scope Production; redeploy setelah perubahan ENV. |
+| `stage=module_load`, `code=ERR_MODULE_NOT_FOUND` atau `MODULE_NOT_FOUND` | Periksa dependency dan berkas yang masuk ke bundle Function. |
+| `stage=database_check`, `code=28P01` | Kredensial role database tidak cocok. |
+| `stage=database_check`, `code=42P01` | Schema belum dimigrasi pada database/branch yang dituju. |
+| `stage=database_check`, `code=42501` | Hak akses role runtime belum lengkap. |
+| `stage=database_pool` atau `application` | Periksa lokasi source di `locations` dan konfigurasi pool/session/VAPID terkait. |
+
+Jika log masih hanya menampilkan teks `vercel_api_initialization_failed` tanpa JSON `stage`/`code`, deployment masih memakai versi handler lama. Gunakan source terbaru dari branch `main` sebelum redeploy.
+
 ## 8. Catatan verifikasi dependensi
 
 Audit npm pada source saat persiapan menunjukkan advisori pada tool pengujian Vitest/tinypool dan library Zod yang sudah digunakan proyek. Paket test tidak diimpor oleh Function. API membatasi JSON 128 KB, namun itu tidak menghapus status advisori Zod. Pembaruan mayor dependensi memerlukan pengujian kompatibilitas terpisah; tidak dilakukan `npm audit fix --force` dalam persiapan hosting ini. Tinjau ulang `npm audit` sebelum production dengan data nyata.

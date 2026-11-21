@@ -1,7 +1,7 @@
 // Share initialization across concurrent requests; a failed cold start may be retried.
 export function createServerlessHandler(
   initialize,
-  logError = () => console.error('vercel_api_initialization_failed')
+  logError = (diagnostic) => console.error(JSON.stringify(diagnostic))
 ) {
   let initialization;
   return async function handler(req, res) {
@@ -11,11 +11,11 @@ export function createServerlessHandler(
         .then(initialize)
         .catch((error) => {
           initialization = undefined;
+          logError(describeStartupError(error));
           throw error;
         });
       ({ app } = await initialization);
     } catch {
-      logError();
       res.statusCode = 503;
       res.setHeader('Content-Type', 'application/json; charset=utf-8');
       res.setHeader('Cache-Control', 'private, no-store');
@@ -33,3 +33,4 @@ export function createServerlessHandler(
     return app(req, res);
   };
 }
+import { describeStartupError } from './startup-error.js';

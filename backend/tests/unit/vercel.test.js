@@ -3,6 +3,7 @@ import request from 'supertest';
 import { describe, expect, it, vi } from 'vitest';
 import { loadVercelEnv } from '../../src/config/vercel-env.js';
 import { createServerlessHandler } from '../../src/lib/serverless-handler.js';
+import { describeStartupError, startupError } from '../../src/lib/startup-error.js';
 
 const profile = {
   APP_MODE: 'pilot',
@@ -66,5 +67,70 @@ describe('Konfigurasi dan cold start Vercel', () => {
     expect((await request(handler).get('/api/ready')).text).toBe('ready');
     expect(initialize).toHaveBeenCalledTimes(2);
     expect(logger).toHaveBeenCalledOnce();
+    expect(JSON.stringify(logger.mock.calls)).not.toContain('password');
+    expect(logger).toHaveBeenCalledWith(
+      expect.objectContaining({
+        event: 'vercel_api_initialization_failed',
+        stage: 'initialize',
+      })
+    );
+  });
+
+  it('mencatat tahap, field konfigurasi, dan kode database tanpa nilai rahasia', () => {
+    const configuration = startupError(
+      'configuration',
+      new Error(
+        'Konfigurasi environment tidak valid: ENCRYPTION_KEY: secret-value; APP_ORIGIN: private-url'
+      )
+    );
+    expect(describeStartupError(configuration)).toMatchObject({
+      stage: 'configuration',
+      fields: expect.arrayContaining(['ENCRYPTION_KEY', 'APP_ORIGIN']),
+    });
+    const database = startupError(
+      'database_check',
+      Object.assign(new Error('password authentication failed for user private-user'), {
+        code: '28P01',
+      })
+    );
+    expect(describeStartupError(database)).toMatchObject({
+      stage: 'database_check',
+      code: '28P01',
+    });
+    expect(JSON.stringify(describeStartupError(database))).not.toContain('private-user');
+    expect(JSON.stringify(describeStartupError(configuration))).not.toContain('secret-value');
+    const moduleError = startupError(
+      'module_load',
+      Object.assign(new Error("Cannot find package 'pg' imported from /private/secret-value"), {
+        code: 'ERR_MODULE_NOT_FOUND',
+      })
+    );
+    expect(describeStartupError(moduleError)).toMatchObject({ module: 'pg' });
+    expect(JSON.stringify(describeStartupError(moduleError))).not.toContain('secret-value');
+  });
+
+  it('mencatat kegagalan import dan membalas 503 pada permintaan bersamaan', async () => {
+    const logger = vi.fn();
+    const error = startupError(
+      'module_load',
+      Object.assign(new Error('Cannot find module /private/path/secret-value'), {
+        code: 'ERR_MODULE_NOT_FOUND',
+      })
+    );
+    const handler = createServerlessHandler(async () => {
+      throw error;
+    }, logger);
+    const responses = await Promise.all([
+      request(handler).get('/api/health'),
+      request(handler).get('/api/ready'),
+    ]);
+    expect(responses.every((response) => response.status === 503)).toBe(true);
+    expect(logger).toHaveBeenCalledWith(
+      expect.objectContaining({
+        stage: 'module_load',
+        code: 'ERR_MODULE_NOT_FOUND',
+      })
+    );
+    expect(JSON.stringify(logger.mock.calls)).not.toContain('secret-value');
   });
 });
