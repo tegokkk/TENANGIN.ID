@@ -59,7 +59,11 @@ export function describeStartupError(error) {
   for (let depth = 0; depth < 5 && cause?.cause; depth += 1) cause = cause.cause;
   const message = typeof cause?.message === 'string' ? cause.message : '';
   const stage = STAGES.has(error?.startupStage) ? error.startupStage : 'initialize';
-  const code = CODES.has(cause?.code) ? cause.code : 'INITIALIZATION_FAILED';
+  const code = CODES.has(cause?.code)
+    ? cause.code
+    : stage === 'configuration'
+      ? 'INVALID_CONFIGURATION'
+      : 'INITIALIZATION_FAILED';
   const missingModule = ['ERR_MODULE_NOT_FOUND', 'MODULE_NOT_FOUND'].includes(code)
     ? message.match(/Cannot find package ['"]((?:@[\w.-]+\/)?[\w.-]+)['"]/)?.[1] ||
       message.match(/Cannot find module ['"][^'"]*[/\\]([\w.-]+\.(?:mjs|js|node|json))['"]/)?.[1]
@@ -75,6 +79,7 @@ export function describeStartupError(error) {
     .slice(0, 3);
   return {
     event: 'vercel_api_initialization_failed',
+    summary: `${stage}: ${code}${fields.length ? ` (${fields.join(', ')})` : ''}`,
     stage,
     code,
     ...(missingModule ? { module: missingModule } : {}),

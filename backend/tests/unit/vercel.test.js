@@ -26,6 +26,50 @@ describe('Konfigurasi dan cold start Vercel', () => {
     });
   });
 
+  it.each([undefined, '', '  ', 'http://127.0.0.1:5173', 'http://tenanginid-xi.vercel.app'])(
+    'memakai origin HTTPS sistem Vercel ketika konfigurasi origin %s',
+    (origin) => {
+      expect(
+        loadVercelEnv({
+          ...profile,
+          APP_ORIGIN: origin,
+          VERCEL_ENV: 'production',
+          VERCEL_PROJECT_PRODUCTION_URL: 'tenanginid-xi.vercel.app',
+          VERCEL_URL: 'tenangin-preview.vercel.app',
+        }).APP_ORIGIN
+      ).toBe('https://tenanginid-xi.vercel.app');
+    }
+  );
+
+  it('mempertahankan custom domain dan memakai deployment origin untuk preview tanpa override', () => {
+    expect(
+      loadVercelEnv({
+        ...profile,
+        APP_ORIGIN: ' https://sekolah.example/ ',
+        VERCEL_PROJECT_PRODUCTION_URL: 'tenanginid-xi.vercel.app',
+      }).APP_ORIGIN
+    ).toBe('https://sekolah.example');
+    expect(
+      loadVercelEnv({
+        ...profile,
+        APP_ORIGIN: undefined,
+        VERCEL_ENV: 'preview',
+        VERCEL_PROJECT_PRODUCTION_URL: 'tenanginid-xi.vercel.app',
+        VERCEL_URL: 'tenangin-preview.vercel.app',
+      }).APP_ORIGIN
+    ).toBe('https://tenangin-preview.vercel.app');
+  });
+
+  it('menolak origin hilang tanpa hostname sistem, origin berkredensial, dan HTTP di luar domain deployment', () => {
+    for (const override of [
+      { APP_ORIGIN: undefined },
+      { APP_ORIGIN: 'https://private-user:private-password@sekolah.example' },
+      { APP_ORIGIN: 'http://other.example', VERCEL_URL: 'tenangin-preview.vercel.app' },
+      { APP_ORIGIN: '', VERCEL_URL: 'user:password@other.example' },
+    ])
+      expect(() => loadVercelEnv({ ...profile, ...override })).toThrow('APP_ORIGIN');
+  });
+
   it('menolak database lokal/test, HTTP, seed dummy, dan proxy yang salah', () => {
     for (const override of [
       { DATABASE_URL: 'postgresql://runtime:unit-test-only@127.0.0.1/production' },
@@ -85,7 +129,9 @@ describe('Konfigurasi dan cold start Vercel', () => {
     );
     expect(describeStartupError(configuration)).toMatchObject({
       stage: 'configuration',
+      code: 'INVALID_CONFIGURATION',
       fields: expect.arrayContaining(['ENCRYPTION_KEY', 'APP_ORIGIN']),
+      summary: expect.stringContaining('ENCRYPTION_KEY'),
     });
     const database = startupError(
       'database_check',

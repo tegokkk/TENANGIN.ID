@@ -90,7 +90,7 @@ Salin nama variabel dari [backend/.env.vercel.example](../backend/.env.vercel.ex
 | `NODE_ENV` | `production` |
 | `APP_MODE` | `pilot` |
 | `ALLOW_DEMO_SEED` | `false` |
-| `APP_ORIGIN` | Origin HTTPS final, misalnya `https://nama-proyek.vercel.app`, tanpa path |
+| `APP_ORIGIN` | Origin HTTPS final, misalnya `https://nama-proyek.vercel.app`, tanpa path. Jika kosong/tidak tersedia, API memakai hostname HTTPS dari variabel sistem Vercel. |
 | `TRUST_PROXY` | `1` |
 | `DATABASE_URL` | URL runtime `tenangin_app` ke PostgreSQL production dengan TLS |
 | `SESSION_SECRET` | Nilai acak unik minimal 32 karakter |
@@ -114,6 +114,8 @@ Jalankan dua kali untuk memperoleh secret sesi dan kunci enkripsi yang berbeda p
 `VITE_API_BASE_URL` tidak perlu diisi; default frontend adalah `/api`. Jangan menaruh password database atau secret ke variabel `VITE_*` karena nilainya masuk ke bundle browser. `DATABASE_ADMIN_URL`, `WORKER_DATABASE_URL`, `TEST_*`, dan `BOOTSTRAP_*` hanya berada pada environment operator/worker, bukan API Vercel.
 
 Preview sebaiknya memakai database dan secret terpisah dari production. Aktifkan variabel pada environment yang akan dideploy, lalu **Redeploy** setelah mengubahnya. Perbarui `APP_ORIGIN` jika domain final berubah.
+
+Fallback origin memerlukan system environment variables Vercel. Production memakai `VERCEL_PROJECT_PRODUCTION_URL`, sedangkan Preview memakai `VERCEL_URL`; keduanya adalah hostname yang disediakan platform, bukan header `Host` dari pengunjung. Origin lokal yang tersalin dari development diganti dengan origin deployment tersebut. HTTP pada hostname deployment yang sama dinormalisasi ke HTTPS; HTTP pada domain lain tetap ditolak. Custom domain HTTPS yang diisi melalui `APP_ORIGIN` tetap dipertahankan. Lihat [variabel sistem Vercel](https://vercel.com/docs/environment-variables/system-environment-variables).
 
 ## 6. Jalankan worker terpisah
 
@@ -148,7 +150,7 @@ Setelah deploy manual:
 
 API 503 saat cold start menunjukkan konfigurasi, schema, data fixture, atau koneksi database perlu diperiksa pada Runtime Logs. Tidak ada migrasi maupun seed otomatis pada saat Function dipanggil.
 
-Log startup berformat JSON dengan `event=vercel_api_initialization_failed`, `stage`, dan `code`. Log tidak menampilkan nilai environment, connection string, SQL, atau pesan error mentah. Jika variabel tidak valid, `fields` mencantumkan nama variabel yang perlu diperiksa.
+Log startup berformat JSON dengan `event=vercel_api_initialization_failed`, `stage`, dan `code`. `summary` menampilkan ringkasan beserta nama variabel tanpa perlu membuka array yang terlipat di dashboard. Log tidak menampilkan nilai environment, connection string, SQL, atau pesan error mentah. Jika variabel tidak valid, `fields` mencantumkan nama variabel yang perlu diperiksa.
 
 | Diagnostik | Pemeriksaan |
 | --- | --- |
