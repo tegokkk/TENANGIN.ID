@@ -91,7 +91,7 @@ Salin nama variabel dari [backend/.env.vercel.example](../backend/.env.vercel.ex
 | `APP_MODE` | `pilot` |
 | `ALLOW_DEMO_SEED` | `false` |
 | `APP_ORIGIN` | Origin HTTPS final, misalnya `https://nama-proyek.vercel.app`, tanpa path. Jika kosong/tidak tersedia, API memakai hostname HTTPS dari variabel sistem Vercel. |
-| `TRUST_PROXY` | `1` |
+| `TRUST_PROXY` | `1`; adapter API Vercel menetapkannya otomatis, terlepas dari nilai ENV. Server lokal/worker tetap mengikuti profil masing-masing. |
 | `DATABASE_URL` | URL runtime `tenangin_app` ke PostgreSQL production dengan TLS |
 | `SESSION_SECRET` | Nilai acak unik minimal 32 karakter |
 | `ENCRYPTION_KEY_ID` | `k1`, atau ID yang sudah digunakan database |

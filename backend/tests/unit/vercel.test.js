@@ -70,13 +70,19 @@ describe('Konfigurasi dan cold start Vercel', () => {
       expect(() => loadVercelEnv({ ...profile, ...override })).toThrow('APP_ORIGIN');
   });
 
-  it('menolak database lokal/test, HTTP, seed dummy, dan proxy yang salah', () => {
+  it.each([undefined, '0', '2', 'false', 'invalid'])(
+    'menetapkan satu proxy tepercaya di Vercel meski ENV berisi %s',
+    (proxy) => {
+      expect(loadVercelEnv({ ...profile, TRUST_PROXY: proxy }).TRUST_PROXY).toBe(1);
+    }
+  );
+
+  it('menolak database lokal/test, HTTP, dan seed dummy', () => {
     for (const override of [
       { DATABASE_URL: 'postgresql://runtime:unit-test-only@127.0.0.1/production' },
       { DATABASE_URL: 'postgresql://runtime:unit-test-only@db.example/tenangin_test' },
       { APP_ORIGIN: 'http://tenangin.example' },
       { ALLOW_DEMO_SEED: 'true' },
-      { TRUST_PROXY: '0' },
     ])
       expect(() => loadVercelEnv({ ...profile, ...override })).toThrow();
   });

@@ -56,7 +56,8 @@ export function loadVercelEnv(source = process.env) {
     ...source,
     NODE_ENV: 'production',
     APP_ORIGIN: appOrigin(source),
-    TRUST_PROXY: source.TRUST_PROXY ?? '1',
+    // This adapter always runs behind Vercel's single trusted ingress proxy.
+    TRUST_PROXY: '1',
     DB_POOL_MIN: source.DB_POOL_MIN ?? '0',
     DB_POOL_MAX: source.DB_POOL_MAX ?? '3',
   });
@@ -71,9 +72,6 @@ export function loadVercelEnv(source = process.env) {
   }
   if (/\/(tenangin_test|tenangin_demo)(?:\?|$)/i.test(database.href)) {
     throw new Error('Vercel tidak boleh memakai database test atau demo.');
-  }
-  if (env.TRUST_PROXY !== 1) {
-    throw new Error('Konfigurasi Vercel ini membutuhkan TRUST_PROXY=1 untuk cookie HTTPS.');
   }
   return { ...env, isServerless: true };
 }
