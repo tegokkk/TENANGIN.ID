@@ -12,14 +12,20 @@ import { timezoneSchema } from '../src/lib/validation.js';
 import { buildGovernanceSeedRows } from '../src/modules/superadmin/governance-defaults.js';
 import { installProductGuides } from '../src/modules/library/product-guides.service.js';
 
+const optionalWorkspaceSetting = (schema) =>
+  z.preprocess((value) => (typeof value === 'string' && !value.trim() ? undefined : value), schema);
+
 const settingsSchema = z.object({
-  schoolCode: z
-    .string()
-    .trim()
-    .min(3)
-    .max(64)
-    .regex(/^[A-Z0-9-]+$/),
-  schoolName: z.string().trim().min(3).max(200),
+  schoolCode: optionalWorkspaceSetting(
+    z
+      .string()
+      .trim()
+      .min(3)
+      .max(64)
+      .regex(/^[A-Z0-9-]+$/)
+      .default('TENANGIN-ID')
+  ),
+  schoolName: optionalWorkspaceSetting(z.string().trim().min(3).max(200).default('TENANGIN.ID')),
   timezone: timezoneSchema.default('Asia/Jakarta'),
   adminCode: z
     .string()
@@ -29,21 +35,34 @@ const settingsSchema = z.object({
     .regex(/^[a-zA-Z0-9._-]+$/)
     .default('Superadmin-01'),
   adminEmail: z
-    .string()
+    .string({ required_error: 'Isi email superadmin.' })
     .trim()
-    .email()
+    .email('Isi alamat email yang valid.')
     .max(200)
     .transform((email) => email.toLowerCase()),
-  adminPassword: z.string().min(12),
+  adminPassword: z
+    .string({ required_error: 'Isi sandi superadmin.' })
+    .min(12, 'Sandi superadmin minimal 12 karakter.'),
   enableMfa: z.boolean().default(false),
 });
 
 export async function provisionFirstAdmin({ db, env, settings }) {
   const parsed = settingsSchema.safeParse(settings);
-  if (!parsed.success)
-    throw new Error(
-      'Identitas sekolah, zona waktu, email, dan sandi admin (minimal 12 karakter) wajib valid.'
-    );
+  if (!parsed.success) {
+    const labels = {
+      schoolCode: 'BOOTSTRAP_SCHOOL_CODE',
+      schoolName: 'BOOTSTRAP_SCHOOL_NAME',
+      timezone: 'BOOTSTRAP_TIMEZONE',
+      adminCode: 'BOOTSTRAP_ADMIN_CODE',
+      adminEmail: 'BOOTSTRAP_ADMIN_EMAIL',
+      adminPassword: 'BOOTSTRAP_ADMIN_PASSWORD',
+      enableMfa: 'BOOTSTRAP_ENABLE_MFA',
+    };
+    const issues = parsed.error.issues
+      .map((issue) => `${labels[issue.path[0]] || issue.path[0]}: ${issue.message}`)
+      .join('; ');
+    throw new Error(`Konfigurasi superadmin tidak valid: ${issues}`);
+  }
   const value = parsed.data;
   const totpSecret = value.enableMfa ? authenticator.generateSecret() : null;
   const recoveryCode = value.enableMfa ? `REC-${generateOpaqueToken(8)}` : null;
@@ -66,7 +85,9 @@ export async function provisionFirstAdmin({ db, env, settings }) {
         .returning('*');
     }
     if (await trx('users').where({ school_id: school.id, role: 'superadmin' }).first()) {
-      throw new Error('Superadmin sekolah sudah tersedia; tidak ada akun atau sandi yang diubah.');
+      throw new Error(
+        'Superadmin ruang kerja sudah tersedia; tidak ada akun atau sandi yang diubah.'
+      );
     }
     const adminId = crypto.randomUUID();
     await trx('users').insert({
@@ -74,7 +95,7 @@ export async function provisionFirstAdmin({ db, env, settings }) {
       school_id: school.id,
       account_code: value.adminCode,
       login_email: value.adminEmail,
-      display_name: 'Superadmin Sekolah',
+      display_name: 'Superadmin',
       role: 'superadmin',
       status: 'active',
       password_hash: passwordHash,
@@ -109,7 +130,7 @@ export async function main() {
       },
     });
     console.log(
-      'Superadmin resmi dibuat. Login standar menggunakan email dan kata sandi. Lengkapi kebijakan, kontak, petugas, dan review sekolah sebelum membuka layanan siswa.'
+      'Superadmin dibuat. Login menggunakan email dan kata sandi. Lengkapi pengaturan layanan sebelum membuka akses siswa.'
     );
     console.log('Kode akun:', result.accountCode);
     if (result.totpSecret) {

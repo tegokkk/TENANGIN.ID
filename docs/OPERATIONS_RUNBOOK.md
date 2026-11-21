@@ -13,19 +13,22 @@
 
 ## 2. Provisioning Akun Superadmin Pertama (Pilot)
 
-Seed runtime dinonaktifkan. `db:seed:test` hanya menulis pada environment/database test terisolasi. Gunakan script operator:
+Seed runtime dinonaktifkan. `db:seed:test` hanya menulis pada environment/database test terisolasi. Di komputer operator, isi `backend/.env.production` dengan email dan sandi unik minimal 12 karakter:
 
-```bash
-BOOTSTRAP_SCHOOL_CODE=SMA-01 \
-BOOTSTRAP_SCHOOL_NAME="SMA Mitra 01" \
-BOOTSTRAP_TIMEZONE="Asia/Jakarta" \
-BOOTSTRAP_ADMIN_CODE="Superadmin-01" \
-BOOTSTRAP_ADMIN_EMAIL="admin@sekolah.sch.id" \
-BOOTSTRAP_ADMIN_PASSWORD="<kata-sandi-kuat-min-12-karakter>" \
-npm run bootstrap:admin --workspace backend
+```dotenv
+BOOTSTRAP_ADMIN_EMAIL=
+BOOTSTRAP_ADMIN_PASSWORD=
 ```
 
-Simpan TOTP secret dan kode pemulihan yang tercetak satu kali di perangkat authenticator operator, lalu bersihkan riwayat terminal.
+Kode dan nama sekolah tidak perlu diisi. Ruang kerja bawaan adalah TENANGIN.ID (kode internal TENANGIN-ID), zona waktu Asia/Jakarta, dan kode akun Superadmin-01. Untuk instalasi khusus, `BOOTSTRAP_SCHOOL_CODE`, `BOOTSTRAP_SCHOOL_NAME`, `BOOTSTRAP_TIMEZONE`, dan `BOOTSTRAP_ADMIN_CODE` tetap didukung. Pertahankan kode ruang kerja lama bila ingin menargetkan instalasi yang sudah ada.
+
+Setelah konfigurasi database dan migrasi selesai, jalankan dari root proyek:
+
+```bash
+npm run bootstrap:production
+```
+
+MFA opsional dan nonaktif secara default. Jika memilih `BOOTSTRAP_ENABLE_MFA=true`, simpan TOTP secret dan kode pemulihan yang tercetak satu kali di tempat pribadi. Bootstrap menolak menimpa admin yang sudah ada; perubahan sandi dilakukan lewat menu Akun setelah login.
 
 ## 3. Menjalankan Worker Terjadwal (`pg-boss`)
 

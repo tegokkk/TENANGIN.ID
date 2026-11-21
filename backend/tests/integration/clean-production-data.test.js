@@ -76,7 +76,7 @@ describe('Pembersihan fixture dan provisioning production kosong', () => {
     };
     await expect(
       provisionFirstAdmin({ db: ctx.adminDb, env: ctx.env, settings: {} })
-    ).rejects.toThrow();
+    ).rejects.toThrow('BOOTSTRAP_ADMIN_EMAIL');
     const result = await provisionFirstAdmin({ db: ctx.adminDb, env: ctx.env, settings });
     const admin = await ctx.adminDb('users').where({ id: result.adminId }).first();
     expect(admin.mfa_enabled).toBe(false);
@@ -122,4 +122,55 @@ describe('Pembersihan fixture dan provisioning production kosong', () => {
     ).rejects.toThrow();
     expect(await ctx.adminDb('schools').where({ code: 'SEKOLAH-LAIN' }).first()).toBeUndefined();
   });
+
+  it.each([
+    ['tidak diisi', {}],
+    ['kosong', { schoolCode: '  ', schoolName: '' }],
+  ])(
+    'bootstrap tanpa identitas sekolah (%s) membuat ruang kerja dan admin yang dapat login',
+    async (_label, workspaceSettings) => {
+      await purgeDummyDatabase(ctx.adminDb, { expectedDatabase: database, apply: true });
+      const settings = {
+        ...workspaceSettings,
+        adminEmail: 'pengelola@example.test',
+        adminPassword: 'OperatorUnique!2026',
+      };
+      await expect(
+        provisionFirstAdmin({
+          db: ctx.adminDb,
+          env: ctx.env,
+          settings: { ...settings, adminPassword: 'pendek' },
+        })
+      ).rejects.toThrow('BOOTSTRAP_ADMIN_PASSWORD');
+      expect(await ctx.adminDb('schools').select('id')).toHaveLength(0);
+
+      const result = await provisionFirstAdmin({ db: ctx.adminDb, env: ctx.env, settings });
+      const workspace = await ctx.adminDb('schools').where({ id: result.schoolId }).first();
+      expect(workspace).toMatchObject({
+        code: 'TENANGIN-ID',
+        name: 'TENANGIN.ID',
+        timezone: 'Asia/Jakarta',
+        personal_access_mode: 'account_approval',
+      });
+      const admin = await ctx.adminDb('users').where({ id: result.adminId }).first();
+      expect(admin).toMatchObject({
+        school_id: workspace.id,
+        role: 'superadmin',
+        account_code: 'Superadmin-01',
+        display_name: 'Superadmin',
+      });
+      const client = await ctx.createAgent();
+      const login = await client.login(settings.adminEmail, settings.adminPassword);
+      expect(login.loginRes.status).toBe(200);
+      expect(login.loginRes.body.data.nextStep).toBe('superadmin_dashboard');
+      expect((await client.agent.get('/api/superadmin/dashboard')).status).toBe(200);
+      await expect(assertNoDummyData(ctx.appDb)).resolves.toBeUndefined();
+
+      await expect(
+        provisionFirstAdmin({ db: ctx.adminDb, env: ctx.env, settings })
+      ).rejects.toThrow('sudah tersedia');
+      expect(await ctx.adminDb('schools').select('id')).toHaveLength(1);
+      expect(await ctx.adminDb('users').select('id')).toHaveLength(1);
+    }
+  );
 });

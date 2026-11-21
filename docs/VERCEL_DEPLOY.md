@@ -48,23 +48,20 @@ Jalankan SQL menggunakan role yang menjalankan migrasi. Jangan menjalankan seed 
 
 ## 3. Buat Superadmin pertama
 
-Tambahkan konfigurasi berikut pada environment operator atau `backend/.env.production`, menggunakan identitas pengelola sebenarnya:
+Tambahkan email dan sandi pengelola pada environment operator atau `backend/.env.production`. Kode dan nama sekolah tidak diperlukan:
 
 ```dotenv
-BOOTSTRAP_SCHOOL_CODE=KODE-SEKOLAH
-BOOTSTRAP_SCHOOL_NAME=Nama Sekolah
-BOOTSTRAP_TIMEZONE=Asia/Jakarta
-BOOTSTRAP_ADMIN_CODE=Superadmin-01
-BOOTSTRAP_ADMIN_EMAIL=email-pengelola@domain-sekolah
-BOOTSTRAP_ADMIN_PASSWORD=ISI_PASSWORD_UNIK_MINIMAL_12_KARAKTER
-BOOTSTRAP_ENABLE_MFA=false
+BOOTSTRAP_ADMIN_EMAIL=
+BOOTSTRAP_ADMIN_PASSWORD=
 ```
+
+Isi email yang valid dan sandi unik minimal 12 karakter sebelum menjalankan perintah. Ruang kerja `TENANGIN.ID` (kode internal `TENANGIN-ID`), zona waktu `Asia/Jakarta`, dan kode akun `Superadmin-01` disiapkan otomatis. Baris `BOOTSTRAP_SCHOOL_CODE` dan `BOOTSTRAP_SCHOOL_NAME` boleh dihapus atau dikosongkan. Instalasi yang sudah memakai kedua variabel tersebut tetap dapat mempertahankannya untuk memilih ruang kerja yang sama; data sekolah yang sudah ada tidak diubah. `BOOTSTRAP_TIMEZONE` dan `BOOTSTRAP_ADMIN_CODE` juga tetap tersedia sebagai opsi.
 
 ```bash
 npm run bootstrap:production
 ```
 
-Script menolak menimpa Superadmin yang sudah ada. Bootstrap membuat pengelola dan panduan produk, tanpa siswa atau aktivitas dummy. MFA dapat dipilih melalui konfigurasi operator; jika diaktifkan, simpan secret dan kode pemulihan yang ditampilkan pada tempat pribadi. Jangan masukkan `BOOTSTRAP_*` ke Vercel.
+Script menolak menimpa Superadmin yang sudah ada dalam ruang kerja tujuan. Bootstrap membuat pengelola dan panduan produk, tanpa siswa atau aktivitas dummy. MFA tidak diwajibkan; untuk mengaktifkannya, isi `BOOTSTRAP_ENABLE_MFA=true`, lalu simpan secret dan kode pemulihan yang ditampilkan pada tempat pribadi. Jangan masukkan `BOOTSTRAP_*` ke Vercel.
 
 ## 4. Import proyek pada dashboard Vercel
 
