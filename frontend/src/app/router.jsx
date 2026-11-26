@@ -11,6 +11,7 @@ import { HelpPage } from '../pages/public/HelpPage.jsx';
 import { LoginPage } from '../pages/auth/LoginPage.jsx';
 import { StudentConsentPanel } from '../features/auth/StudentConsentPanel.jsx';
 import { HomePage } from '../pages/student/HomePage.jsx';
+import { MateriPage } from '../pages/student/MateriPage.jsx';
 import { TenangPage } from '../pages/student/TenangPage.jsx';
 import { JournalPage } from '../pages/student/JournalPage.jsx';
 import { ReflectionPage } from '../pages/student/ReflectionPage.jsx';
@@ -67,6 +68,7 @@ export function AppRouter() {
               <Route path="/app/catat" element={<JournalPage />} />
               <Route path="/app/refleksi" element={<ReflectionPage />} />
             </Route>
+            <Route path="/app/materi" element={<MateriPage />} />
             <Route path="/app/tenang" element={<TenangPage />} />
             <Route path="/app/pustaka" element={<TenangPage />} />
             <Route path="/app/bantuan" element={<HelpPage />} />

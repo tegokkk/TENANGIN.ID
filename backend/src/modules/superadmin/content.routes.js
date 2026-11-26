@@ -89,18 +89,24 @@ export function createContentAdminRouter({ db, csrf, guard }) {
       csrf.csrfProtection,
       validateRequest({ body: schema }),
       asyncHandler(async (req, res) => {
+        const b = req.validatedBody;
+        const shouldPublishNow = key === 'article' && Boolean(b.publishNow);
+        const reviewerRef = shouldPublishNow
+          ? b.reviewerRef || req.currentUser.displayName || req.currentUser.accountCode
+          : null;
         const row = await db.transaction(async (trx) => {
           const [created] = await trx(table)
             .insert({
-              ...values(req.validatedBody),
+              ...values(b),
               id: crypto.randomUUID(),
               school_id: req.currentUser.schoolId,
               version: 1,
-              status: 'draft',
-              reviewer_ref: null,
+              status: shouldPublishNow ? 'published' : 'draft',
+              reviewer_ref: reviewerRef,
+              ...(shouldPublishNow ? { published_at: new Date() } : {}),
             })
             .returning('*');
-          await audit(trx, req, created, 'created');
+          await audit(trx, req, created, shouldPublishNow ? 'created_and_published' : 'created');
           return created;
         });
         return sendSuccess(res, { [key]: row }, 201);
@@ -121,6 +127,7 @@ export function createContentAdminRouter({ db, csrf, guard }) {
           if (b.version !== undefined && b.version !== existing.version)
             throw conflict('Versi konten telah berubah. Muat ulang editor.');
           const next = values(b);
+          const shouldPublishNow = key === 'article' && Boolean(b.publishNow);
           const changed = Object.entries(next).some(([field, value]) => {
             const prior =
               typeof existing[field] === 'object' && existing[field] !== null
@@ -128,24 +135,51 @@ export function createContentAdminRouter({ db, csrf, guard }) {
                 : existing[field];
             return prior !== value;
           });
-          if (!changed) return existing;
+          if (!changed && !(shouldPublishNow && existing.status !== 'published')) return existing;
+          const reviewerRef = shouldPublishNow
+            ? b.reviewerRef ||
+              existing.reviewer_ref ||
+              req.currentUser.displayName ||
+              req.currentUser.accountCode
+            : null;
           const [updated] = await trx(table)
             .where({ id: existing.id })
             .update({
               ...next,
-              version: existing.version + 1,
-              status: 'draft',
-              reviewer_ref: null,
-              ...(key === 'article' ? { published_at: null } : {}),
+              version: changed ? existing.version + 1 : existing.version,
+              status: shouldPublishNow ? 'published' : 'draft',
+              reviewer_ref: reviewerRef,
+              ...(key === 'article'
+                ? { published_at: shouldPublishNow ? new Date() : null }
+                : {}),
               updated_at: new Date(),
             })
             .returning('*');
-          await audit(trx, req, updated, 'updated');
+          await audit(trx, req, updated, shouldPublishNow ? 'updated_and_published' : 'updated');
           return updated;
         });
         return sendSuccess(res, { [key]: row });
       })
     );
+    if (key === 'article') {
+      router.delete(
+        `/${path}/:id`,
+        csrf.csrfProtection,
+        validateRequest({ params: idParamSchema }),
+        asyncHandler(async (req, res) => {
+          await db.transaction(async (trx) => {
+            const existing = await trx(table)
+              .where({ id: req.validatedParams.id })
+              .forUpdate()
+              .first();
+            assertSameSchool(existing, req.currentUser.schoolId, 'Konten tidak ditemukan.');
+            await trx(table).where({ id: existing.id }).del();
+            await audit(trx, req, existing, 'deleted');
+          });
+          return sendSuccess(res, { deleted: true });
+        })
+      );
+    }
     router.patch(
       `/${path}/:id/status`,
       csrf.csrfProtection,

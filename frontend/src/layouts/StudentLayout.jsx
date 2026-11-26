@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, NavLink, Outlet } from 'react-router';
-import { BookOpenCheck, Home, MessageCircleHeart, NotebookPen, Wind } from 'lucide-react';
+import { BookOpen, BookOpenCheck, Home, MessageCircleHeart, NotebookPen, Wind } from 'lucide-react';
 import { BrandLogo, BrandWordmark } from '../assets/illustrations/BrandLogo.jsx';
 import { OfflineBanner } from '../components/states/OfflineBanner.jsx';
 import { AccountSettingsPanel } from '../components/navigation/AccountSettingsPanel.jsx';
@@ -9,6 +9,7 @@ import styles from './Layouts.module.css';
 
 const STUDENT_MENUS = [
   { to: '/app', label: 'Beranda', icon: Home, end: true },
+  { to: '/app/materi', label: 'Materi', icon: BookOpen },
   { to: '/app/tenang', label: 'Tenang', icon: Wind },
   { to: '/app/catat', label: 'Catat', icon: NotebookPen },
   { to: '/app/refleksi', label: 'Refleksi', icon: BookOpenCheck },

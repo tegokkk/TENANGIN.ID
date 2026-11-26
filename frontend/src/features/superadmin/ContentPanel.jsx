@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '../../lib/api-client.js';
 import { Card } from '../../components/ui/Card.jsx';
@@ -36,8 +36,21 @@ const TRANSITIONS = {
   archived: [['draft', 'Buka Draf']],
 };
 
+function slugifyTitle(value) {
+  return String(value || '')
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 120);
+}
+
 function ContentForm({ kind, record, onSaved, onCancel }) {
   const isArticle = kind === 'articles';
+  const formRef = useRef(null);
+  const [slugTouched, setSlugTouched] = useState(Boolean(record?.slug));
   const [form, setForm] = useState(() => ({
     slug: record?.slug || '',
     title: record?.title || '',
@@ -50,13 +63,14 @@ function ContentForm({ kind, record, onSaved, onCancel }) {
     durationSeconds: record?.duration_seconds || 180,
     stopNotice: record?.stop_notice || '',
     audioUrl: record?.audio_url || '',
-    sourceReference: record?.source_reference || '',
-    mediaRights: record?.media_rights || '',
+    sourceReference: record?.source_reference || (isArticle ? 'Tim BK / Sekolah' : ''),
+    mediaRights: record?.media_rights || (isArticle ? 'Materi internal sekolah' : ''),
     instructions: record?.instructions || [{ phase: '', seconds: 4, quote: '', detail: '' }],
   }));
   const set = (key, value) => setForm((previous) => ({ ...previous, [key]: value }));
+
   const save = useMutation({
-    mutationFn: () =>
+    mutationFn: ({ publishNow = false } = {}) =>
       apiRequest(`/superadmin/content/${kind}${record ? `/${record.id}` : ''}`, {
         method: record ? 'PATCH' : 'POST',
         body: {
@@ -68,17 +82,32 @@ function ContentForm({ kind, record, onSaved, onCancel }) {
           durationSeconds: Number(form.durationSeconds),
           audioUrl: form.audioUrl || null,
           version: record?.version,
+          ...(isArticle ? { publishNow } : {}),
         },
       }),
-    onSuccess: onSaved,
+    onSuccess: (_data, variables) => onSaved({ published: Boolean(variables?.publishNow) }),
   });
+
+  function handleTitleChange(value) {
+    setForm((previous) => ({
+      ...previous,
+      title: value,
+      ...(isArticle && !record && !slugTouched ? { slug: slugifyTitle(value) } : {}),
+    }));
+  }
+
+  function handlePublishNow() {
+    if (formRef.current && !formRef.current.reportValidity()) return;
+    save.mutate({ publishNow: true });
+  }
 
   return (
     <form
+      ref={formRef}
       className={styles.editorBox}
       onSubmit={(event) => {
         event.preventDefault();
-        save.mutate();
+        save.mutate({ publishNow: false });
       }}
     >
       <h3 className="cardTitle">
@@ -86,20 +115,27 @@ function ContentForm({ kind, record, onSaved, onCancel }) {
         {record ? ` — v${record.version}` : ' Baru'}
       </h3>
       <StatusNotice tone="info">
-        Perubahan isi membuat versi baru berstatus draf dan memerlukan tinjauan ulang.
+        {isArticle
+          ? 'Pilih "Simpan & Terbitkan ke Siswa" agar materi langsung tampil di menu Materi siswa, atau "Simpan Draf" untuk meninjau terlebih dahulu.'
+          : 'Perubahan isi membuat versi baru berstatus draf dan memerlukan tinjauan ulang.'}
       </StatusNotice>
       <div className={styles.twoColGrid}>
         <Input
           label="Slug"
           value={form.slug}
-          onChange={(e) => set('slug', e.target.value)}
+          onChange={(e) => {
+            setSlugTouched(true);
+            set('slug', e.target.value);
+          }}
+          placeholder="otomatis-dari-judul"
           required
           maxLength={120}
         />
         <Input
           label={isArticle ? 'Judul Artikel' : 'Judul Latihan'}
           value={form.title}
-          onChange={(e) => set('title', e.target.value)}
+          onChange={(e) => handleTitleChange(e.target.value)}
+          placeholder={isArticle ? 'Contoh: Cara Mengatur Waktu Belajar Jelang Ujian' : ''}
           required
           maxLength={200}
         />
@@ -112,18 +148,21 @@ function ContentForm({ kind, record, onSaved, onCancel }) {
               label="Topik"
               value={form.topic}
               onChange={(e) => set('topic', e.target.value)}
+              placeholder="Contoh: Stres Belajar, Emosi, Tidur"
               required
             />
             <Input
               label="Tag (pisahkan dengan koma)"
               value={form.tags}
               onChange={(e) => set('tags', e.target.value)}
+              placeholder="stres, fokus, ujian"
             />
           </div>
           <Input
             label="Ringkasan"
             value={form.summary}
             onChange={(e) => set('summary', e.target.value)}
+            placeholder="Ringkasan singkat isi materi untuk pratinjau siswa"
             required
             maxLength={400}
           />
@@ -131,6 +170,7 @@ function ContentForm({ kind, record, onSaved, onCancel }) {
             label="Isi Artikel"
             value={form.body}
             onChange={(e) => set('body', e.target.value)}
+            placeholder="Tulis isi materi lengkap di sini..."
             required
             maxLength={20000}
           />
@@ -262,7 +302,17 @@ function ContentForm({ kind, record, onSaved, onCancel }) {
 
       <StatusNotice tone="error">{save.error?.message}</StatusNotice>
       <div className="cluster">
-        <Button type="submit" disabled={save.isPending}>
+        {isArticle && (
+          <Button
+            type="button"
+            variant="primary"
+            disabled={save.isPending}
+            onClick={handlePublishNow}
+          >
+            {save.isPending ? 'Menyimpan...' : 'Simpan & Terbitkan ke Siswa'}
+          </Button>
+        )}
+        <Button type="submit" variant={isArticle ? 'secondary' : 'primary'} disabled={save.isPending}>
           {save.isPending ? 'Menyimpan...' : 'Simpan Draf'}
         </Button>
         <Button type="button" variant="ghost" onClick={onCancel}>
@@ -273,9 +323,12 @@ function ContentForm({ kind, record, onSaved, onCancel }) {
   );
 }
 
-function ContentSection({ kind, title }) {
+function ContentSection({ kind, title, subtitle }) {
+  const isArticle = kind === 'articles';
   const queryClient = useQueryClient();
   const [editor, setEditor] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [search, setSearch] = useState('');
   const [reviewers, setReviewers] = useState({});
   const [notice, setNotice] = useState(null);
   const query = useQuery({
@@ -301,23 +354,66 @@ function ContentSection({ kind, title }) {
       setNotice('Status konten diperbarui dan dicatat pada audit.');
     },
   });
+  const remove = useMutation({
+    mutationFn: (row) =>
+      apiRequest(`/superadmin/content/${kind}/${row.id}`, {
+        method: 'DELETE',
+      }),
+    onSuccess: () => {
+      refresh();
+      setDeleteTarget(null);
+      setNotice('Materi dihapus dan dicatat pada audit.');
+    },
+  });
+
+  const rows = (query.data?.[kind] || []).filter((row) => {
+    const q = search.trim().toLowerCase();
+    if (!q) return true;
+    return (
+      String(row.title || '')
+        .toLowerCase()
+        .includes(q) ||
+      String(row.topic || '')
+        .toLowerCase()
+        .includes(q) ||
+      String(row.summary || '')
+        .toLowerCase()
+        .includes(q)
+    );
+  });
 
   return (
     <Card className="stack-md">
       <div className={styles.rowBetween}>
-        <h2 className="cardTitle">{title}</h2>
+        <div>
+          <h2 className="cardTitle">{title}</h2>
+          {subtitle && (
+            <p className="muted-text" style={{ margin: '4px 0 0', fontSize: 'var(--text-sm)' }}>
+              {subtitle}
+            </p>
+          )}
+        </div>
         <Button variant="primary" size="sm" onClick={() => setEditor({})}>
-          Buat {kind === 'articles' ? 'Artikel' : 'Latihan'} Baru
+          Buat {isArticle ? 'Artikel' : 'Latihan'} Baru
         </Button>
       </div>
 
+      {isArticle && (
+        <Input
+          label="Cari materi"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Cari judul, topik, atau ringkasan materi..."
+        />
+      )}
+
       <StatusNotice tone="success">{notice}</StatusNotice>
-      <StatusNotice tone="error">{status.error?.message}</StatusNotice>
+      <StatusNotice tone="error">{status.error?.message || remove.error?.message}</StatusNotice>
 
       <Dialog
         open={Boolean(editor)}
         onClose={() => setEditor(null)}
-        title={`${editor?.id ? 'Edit' : 'Buat Draf'} ${kind === 'articles' ? 'Artikel' : 'Latihan'}${editor?.version ? ` — v${editor.version}` : ' Baru'}`}
+        title={`${editor?.id ? 'Edit' : 'Buat Draf'} ${isArticle ? 'Artikel' : 'Latihan'}${editor?.version ? ` — v${editor.version}` : ' Baru'}`}
         size="lg"
       >
         {editor && (
@@ -326,47 +422,104 @@ function ContentSection({ kind, title }) {
             kind={kind}
             record={editor.id ? editor : null}
             onCancel={() => setEditor(null)}
-            onSaved={() => {
+            onSaved={({ published } = {}) => {
               refresh();
               setEditor(null);
-              setNotice('Draf tersimpan dan dicatat pada audit.');
+              setNotice(
+                published
+                  ? 'Materi diterbitkan ke ruang siswa dan dicatat pada audit.'
+                  : 'Draf tersimpan dan dicatat pada audit.'
+              );
             }}
           />
         )}
+      </Dialog>
+
+      <Dialog
+        open={Boolean(deleteTarget)}
+        onClose={() => setDeleteTarget(null)}
+        title="Hapus Materi"
+        size="sm"
+      >
+        <div className="stack-md">
+          <p style={{ margin: 0, fontSize: 'var(--text-sm)' }}>
+            Yakin ingin menghapus materi <strong>{deleteTarget?.title}</strong>? Materi yang
+            dihapus tidak lagi muncul di ruang siswa.
+          </p>
+          <div className="cluster">
+            <Button
+              variant="danger"
+              disabled={remove.isPending}
+              onClick={() => deleteTarget && remove.mutate(deleteTarget)}
+            >
+              {remove.isPending ? 'Menghapus...' : 'Ya, Hapus Materi'}
+            </Button>
+            <Button variant="ghost" onClick={() => setDeleteTarget(null)}>
+              Batal
+            </Button>
+          </div>
+        </div>
       </Dialog>
 
       {query.isLoading ? (
         <LoadingState />
       ) : query.isError ? (
         <ErrorState message={query.error.message} onRetry={query.refetch} />
+      ) : rows.length === 0 ? (
+        <p className="muted-text" style={{ margin: 0, fontSize: 'var(--text-sm)' }}>
+          {search.trim()
+            ? `Tidak ada materi yang cocok dengan "${search.trim()}".`
+            : `Belum ada ${isArticle ? 'materi' : 'latihan'}.`}
+        </p>
       ) : (
         <div className="stack-sm">
-          {(query.data?.[kind] || []).map((row) => (
+          {rows.map((row) => (
             <section className={styles.itemCard} key={row.id} aria-label={row.title}>
               <div className={styles.twoColActionRow}>
-                <div className="cluster">
-                  <strong>{row.title}</strong>
-                  <Badge tone={row.status === 'published' ? 'success' : 'warning'}>
-                    v{row.version} • {STATUS_LABELS[row.status] || row.status}
-                  </Badge>
+                <div className="stack-xs" style={{ minWidth: 0 }}>
+                  <div className="cluster">
+                    <strong>{row.title}</strong>
+                    <Badge tone={row.status === 'published' ? 'success' : 'warning'}>
+                      v{row.version} • {STATUS_LABELS[row.status] || row.status}
+                    </Badge>
+                    {isArticle && row.topic && <Badge tone="neutral">{row.topic}</Badge>}
+                  </div>
+                  {isArticle && row.summary && (
+                    <p className="muted-text" style={{ margin: 0, fontSize: 'var(--text-sm)' }}>
+                      {row.summary}
+                    </p>
+                  )}
                 </div>
                 <div className="cluster">
                   <Button
                     variant="secondary"
                     size="sm"
-                    aria-label={`Edit ${kind === 'articles' ? 'Artikel' : 'Latihan'}: ${row.title}`}
+                    aria-label={`Edit ${isArticle ? 'Artikel' : 'Latihan'}: ${row.title}`}
                     onClick={() => setEditor(row)}
                   >
-                    Edit {kind === 'articles' ? 'Artikel' : 'Latihan'}
+                    Edit {isArticle ? 'Artikel' : 'Latihan'}
                   </Button>
                   <ActionMenu
                     label="Status Konten"
-                    items={(TRANSITIONS[row.status] || []).map(([next, label]) => ({
-                      key: next,
-                      label,
-                      disabled: status.isPending,
-                      onClick: () => status.mutate({ row, next }),
-                    }))}
+                    items={[
+                      ...(TRANSITIONS[row.status] || []).map(([next, label]) => ({
+                        key: next,
+                        label,
+                        disabled: status.isPending,
+                        onClick: () => status.mutate({ row, next }),
+                      })),
+                      ...(isArticle
+                        ? [
+                            {
+                              key: 'delete',
+                              label: 'Hapus Materi',
+                              tone: 'danger',
+                              disabled: remove.isPending,
+                              onClick: () => setDeleteTarget(row),
+                            },
+                          ]
+                        : []),
+                    ]}
                   />
                 </div>
               </div>
@@ -388,8 +541,16 @@ function ContentSection({ kind, title }) {
 export function ContentPanel() {
   return (
     <div className="stack-lg">
-      <ContentSection kind="articles" title="Alur Penerbitan Artikel" />
-      <ContentSection kind="exercises" title="Alur Penerbitan Latihan Tenang" />
+      <ContentSection
+        kind="articles"
+        title="Materi & Artikel Siswa"
+        subtitle="Materi yang berstatus Terbit akan langsung muncul di menu Materi dan Ruang Tenang siswa."
+      />
+      <ContentSection
+        kind="exercises"
+        title="Alur Penerbitan Latihan Tenang"
+        subtitle="Latihan yang berstatus Terbit akan muncul di halaman Ruang Tenang siswa."
+      />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Bell,
+  BookOpen,
   BookOpenCheck,
   CheckCircle2,
   ChevronDown,
@@ -50,6 +51,12 @@ const WEEKDAYS = [
 ];
 
 const QUICK_ACTIVITIES = [
+  {
+    to: '/app/materi',
+    title: 'Materi',
+    desc: 'Bacaan & panduan dari sekolah',
+    icon: BookOpen,
+  },
   {
     to: '/app/tenang',
     title: 'Tenang',

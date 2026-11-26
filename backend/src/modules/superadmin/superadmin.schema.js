@@ -69,6 +69,7 @@ export const articleSchema = z.object({
   mediaRights: z.string().trim().min(2).max(200),
   reviewerRef: z.string().trim().max(160).nullable().optional(),
   substantiveChange: z.boolean().optional().default(false),
+  publishNow: z.boolean().optional().default(false),
 });
 
 export const exerciseSchema = z.object({
@@ -100,6 +101,7 @@ export const exerciseSchema = z.object({
   mediaRights: z.string().trim().min(2).max(200),
   reviewerRef: z.string().trim().max(160).nullable().optional(),
   substantiveChange: z.boolean().optional().default(false),
+  publishNow: z.boolean().optional().default(false),
 });
 
 export const contentStatusSchema = z.object({

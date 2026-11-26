@@ -6,8 +6,10 @@ import { createMemoryRouter, RouterProvider } from 'react-router';
 import { AuthProvider } from '../features/auth/AuthContext.jsx';
 import { isPublicCacheablePath } from '../lib/pwa.js';
 import { JournalPage } from '../pages/student/JournalPage.jsx';
+import { MateriPage } from '../pages/student/MateriPage.jsx';
 import { TenangPage } from '../pages/student/TenangPage.jsx';
 import { CounselorDashboardPage } from '../pages/counselor/DashboardPage.jsx';
+import { ContentPanel } from '../features/superadmin/ContentPanel.jsx';
 import { HelpPage } from '../pages/public/HelpPage.jsx';
 
 function mockFetchHandlers(handlers) {
@@ -354,5 +356,123 @@ describe('Frontend Komponen & Aturan Privasi PRD', () => {
     expect(screen.getByText(/Jam layanan belum ditetapkan/i)).toBeInTheDocument();
     expect(screen.queryByText(/Bu Rani|Pak Surya|08:00|15:00|Senin/i)).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /Kirim Permintaan/i })).not.toBeInTheDocument();
+  });
+
+  it('Materi siswa: menampilkan materi terbit, mendukung filter topik, dan membuka isi lengkap', async () => {
+    const user = userEvent.setup();
+    mockFetchHandlers([
+      {
+        match: (p) => p === '/public/config',
+        response: { ok: true, data: { appMode: 'demo', school: STUDENT_SESSION.data.school } },
+      },
+      { match: (p) => p === '/auth/session', response: STUDENT_SESSION },
+      {
+        match: (p) => p.startsWith('/articles'),
+        response: {
+          ok: true,
+          data: {
+            articles: [
+              {
+                id: 'm1',
+                slug: 'mengelola-stres-ujian',
+                topic: 'Stres Belajar',
+                title: 'Cara Mengelola Stres Jelang Ujian',
+                summary: 'Langkah singkat mengatur jadwal belajar tanpa panik.',
+                body: 'Mulailah dari satu tugas kecil selama 20 menit lalu ambil jeda 5 menit.',
+                tags: ['stres', 'ujian'],
+                version: 1,
+                sourceReference: 'Tim BK Sekolah',
+                mediaRights: 'Materi internal sekolah',
+                publishedAt: '2026-11-26T08:00:00Z',
+              },
+              {
+                id: 'm2',
+                slug: 'tidur-cukup-remaja',
+                topic: 'Tidur',
+                title: 'Menjaga Pola Tidur di Hari Sekolah',
+                summary: 'Kebiasaan sederhana sebelum tidur.',
+                body: 'Jauhkan layar 30 menit sebelum tidur agar pikiran lebih tenang.',
+                tags: ['tidur'],
+                version: 1,
+                sourceReference: 'Tim BK Sekolah',
+                mediaRights: 'Materi internal sekolah',
+                publishedAt: '2026-11-25T08:00:00Z',
+              },
+            ],
+          },
+        },
+      },
+    ]);
+
+    renderWithProviders(<MateriPage />, '/app/materi');
+    await waitFor(() =>
+      expect(screen.getByText('Cara Mengelola Stres Jelang Ujian')).toBeInTheDocument()
+    );
+    expect(screen.getByText('Menjaga Pola Tidur di Hari Sekolah')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Tidur', exact: true }));
+    expect(screen.queryByText('Cara Mengelola Stres Jelang Ujian')).not.toBeInTheDocument();
+    expect(screen.getByText('Menjaga Pola Tidur di Hari Sekolah')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: /Baca Materi/i }));
+    expect(
+      screen.getByText(/Jauhkan layar 30 menit sebelum tidur agar pikiran lebih tenang/i)
+    ).toBeInTheDocument();
+  });
+
+  it('Superadmin ContentPanel: mengirim publishNow saat klik Simpan & Terbitkan ke Siswa', async () => {
+    const user = userEvent.setup();
+    let capturedBody = null;
+    mockFetchHandlers([
+      { match: (p) => p === '/public/config', response: { ok: true, data: { appMode: 'demo' } } },
+      { match: (p) => p === '/auth/csrf', response: { ok: true, data: { csrfToken: 'csrf-123' } } },
+      {
+        match: (p, m) => p === '/superadmin/content/articles' && m === 'GET',
+        response: { ok: true, data: { articles: [] } },
+      },
+      {
+        match: (p, m) => p === '/superadmin/content/exercises' && m === 'GET',
+        response: { ok: true, data: { exercises: [] } },
+      },
+      {
+        match: (p, m) => p === '/superadmin/content/articles' && m === 'POST',
+        status: 201,
+        response: (_p, _m, init) => {
+          capturedBody = JSON.parse(init.body);
+          return {
+            ok: true,
+            data: {
+              article: {
+                id: 'a-new',
+                ...capturedBody,
+                version: 1,
+                status: capturedBody.publishNow ? 'published' : 'draft',
+              },
+            },
+          };
+        },
+      },
+    ]);
+
+    renderWithProviders(<ContentPanel />, '/superadmin');
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Buat Artikel Baru' })).toBeInTheDocument()
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Buat Artikel Baru' }));
+    await user.type(screen.getByLabelText('Judul Artikel'), 'Tips Fokus Belajar');
+    await user.type(screen.getByLabelText('Topik'), 'Belajar');
+    await user.type(screen.getByLabelText('Ringkasan'), 'Panduan singkat menjaga fokus belajar.');
+    await user.type(
+      screen.getByLabelText('Isi Artikel'),
+      'Bagi waktu belajar menjadi sesi 25 menit dengan jeda singkat.'
+    );
+
+    expect(screen.getByLabelText('Slug')).toHaveValue('tips-fokus-belajar');
+    await user.click(screen.getByRole('button', { name: 'Simpan & Terbitkan ke Siswa' }));
+
+    await waitFor(() => expect(capturedBody).not.toBeNull());
+    expect(capturedBody.publishNow).toBe(true);
+    expect(capturedBody.slug).toBe('tips-fokus-belajar');
   });
 });

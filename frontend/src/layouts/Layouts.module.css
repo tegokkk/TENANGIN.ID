@@ -429,12 +429,18 @@
   border-color: transparent;
 }
 .dashboardShell .bottomNav {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   box-shadow: none;
   background: white;
   backdrop-filter: none;
   gap: 0;
-  padding-inline: 4px;
+  padding-inline: 2px;
+}
+@media (max-width: 399px) {
+  .dashboardShell .bottomLink {
+    font-size: 0.68rem;
+    gap: 2px;
+  }
 }
 .dashboardShell .headerInner {
   flex-wrap: nowrap;
